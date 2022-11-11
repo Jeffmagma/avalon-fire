@@ -1,5 +1,3 @@
-import "./App.css";
-
 import { initializeApp } from "firebase/app";
 import {
 	getFirestore,
@@ -13,6 +11,8 @@ import {
 	updateDoc,
 	arrayUnion,
 	arrayRemove,
+	getDoc,
+	setDoc,
 } from "firebase/firestore";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import React, { useState, useEffect } from "react";
@@ -52,15 +52,13 @@ function CreateGame() {
 	return (
 		<button
 			onClick={() => {
-				create_game({ roles: [] });
+				create_game({ roles: ["morgana"] });
 			}}
 		>
 			create game
 		</button>
 	);
 }
-
-// join a game with id, adding
 
 function Game(props) {
 	const id = props.id;
@@ -127,12 +125,26 @@ const auth = getAuth();
 
 function App() {
 	const [game_id, set_game_id] = useState("");
+	//const [user_id, set_user_id] = useState("");
+	const [display_name, set_display_name] = useState("");
 
 	useEffect(() => {
 		onAuthStateChanged(auth, (user) => {
 			if (user) {
-				const uid = user.uid;
-				console.log(uid);
+				//set_user_id(user.uid);
+				console.log("user:" + user.uid);
+
+				let user_info = doc(db, "users", user.uid);
+				getDoc(user_info).then((snapshot) => {
+					if (snapshot.exists()) {
+						console.log("found name");
+						set_display_name(snapshot.data().display_name);
+					} else {
+						console.log("added user");
+						setDoc(user_info, { display_name: user.uid });
+						set_display_name(user.uid);
+					}
+				});
 			}
 		});
 		signInAnonymously(auth)
@@ -140,16 +152,14 @@ function App() {
 				console.log("successfully signed in");
 			})
 			.catch((error) => {
-				const errorCode = error.code;
-				const errorMessage = error.message;
-				console.log(errorMessage + errorCode);
+				console.err("error signing in:" + error.code + error.message);
 			});
 	}, []);
 
 	return (
 		<div className="App">
 			<header className="App-header">
-				<p>avalon</p>
+				<p>avalon {display_name}</p>
 				<CreateGame />
 				{game_id === "" ? <GameList sgid={set_game_id} /> : <Game id={game_id} sgid={set_game_id} />}
 			</header>
