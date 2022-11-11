@@ -1,7 +1,20 @@
 import "./App.css";
 
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, doc } from "firebase/firestore";
+import {
+	getFirestore,
+	collection,
+	onSnapshot,
+	doc,
+	addDoc,
+	serverTimestamp,
+	query,
+	orderBy,
+	updateDoc,
+	arrayUnion,
+	arrayRemove,
+} from "firebase/firestore";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import React, { useState, useEffect } from "react";
 
 const firebaseConfig = {
@@ -17,6 +30,38 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+const q = query(collection(db, "games"), orderBy("created", "desc"));
+
+function create_game(data) {
+	addDoc(q, {
+		created: serverTimestamp(),
+		players: [],
+		roles: data.roles,
+		status: "lobby",
+		turn: 0,
+		votes: { 0: [true, false], 1: [false, true] },
+	});
+}
+
+function join_game(id, player_name) {
+	const game_doc = doc(db, "games", id);
+	updateDoc(game_doc, { players: arrayUnion(player_name) });
+}
+
+function CreateGame() {
+	return (
+		<button
+			onClick={() => {
+				create_game({ roles: [] });
+			}}
+		>
+			create game
+		</button>
+	);
+}
+
+// join a game with id, adding
+
 function Game(props) {
 	const id = props.id;
 	const [data, setData] = useState({});
@@ -29,7 +74,16 @@ function Game(props) {
 	return (
 		<>
 			{JSON.stringify(data)}
-			<button onClick={() => props.sgid("")}>return to lobby</button>
+			<button
+				onClick={() => {
+					updateDoc(doc(db, "games", id), {
+						players: arrayRemove("player_name"),
+					});
+					props.sgid("");
+				}}
+			>
+				return to lobby
+			</button>
 		</>
 	);
 }
@@ -37,7 +91,7 @@ function Game(props) {
 function GameList(props) {
 	const [games, setGames] = useState([]);
 	useEffect(() => {
-		onSnapshot(collection(db, "games"), (snapshot) => {
+		onSnapshot(q, (snapshot) => {
 			setGames(
 				snapshot.docs.map((doc) => ({
 					id: doc.id,
@@ -56,6 +110,7 @@ function GameList(props) {
 						id: {game.id} players: {game.item.player_count}
 						<button
 							onClick={() => {
+								join_game(game.id);
 								console.log(game.id);
 								props.sgid(game.id);
 							}}
@@ -68,13 +123,34 @@ function GameList(props) {
 		</div>
 	);
 }
+const auth = getAuth();
 
 function App() {
 	const [game_id, set_game_id] = useState("");
+
+	useEffect(() => {
+		onAuthStateChanged(auth, (user) => {
+			if (user) {
+				const uid = user.uid;
+				console.log(uid);
+			}
+		});
+		signInAnonymously(auth)
+			.then(() => {
+				console.log("successfully signed in");
+			})
+			.catch((error) => {
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				console.log(errorMessage + errorCode);
+			});
+	}, []);
+
 	return (
 		<div className="App">
 			<header className="App-header">
 				<p>avalon</p>
+				<CreateGame />
 				{game_id === "" ? <GameList sgid={set_game_id} /> : <Game id={game_id} sgid={set_game_id} />}
 			</header>
 		</div>
