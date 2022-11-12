@@ -1,15 +1,10 @@
-import { initializeApp } from "firebase/app";
 import {
-	getFirestore,
 	collection,
 	onSnapshot,
 	doc,
 	addDoc,
 	serverTimestamp,
-	query,
-	orderBy,
 	updateDoc,
-	arrayUnion,
 	arrayRemove,
 	getDoc,
 	setDoc,
@@ -17,23 +12,15 @@ import {
 import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import React, { useState, useEffect } from "react";
 
-const firebaseConfig = {
-	apiKey: "AIzaSyC5GPT8W32RQXcpy_dLXM7K1cpCvPISEY4",
-	authDomain: "cyan-pink.firebaseapp.com",
-	projectId: "cyan-pink",
-	storageBucket: "cyan-pink.appspot.com",
-	messagingSenderId: "612760891208",
-	appId: "1:612760891208:web:fa977503cb26c8df074d7d",
-	measurementId: "G-6FXRTHXG1C",
-};
+import { Space, Row, Col, Input, Button } from "antd";
+import "antd/dist/antd.dark.min.css";
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+import RoomList from "./components/RoomList";
+import db from "./firebase";
 
-const q = query(collection(db, "games"), orderBy("created", "desc"));
-
-function create_game(data) {
-	addDoc(q, {
+function create_game(creator, data) {
+	addDoc(collection(db, "games"), {
+		creator: creator,
 		created: serverTimestamp(),
 		players: [],
 		roles: data.roles,
@@ -43,16 +30,17 @@ function create_game(data) {
 	});
 }
 
-function join_game(id, player_name) {
+function leave_game(id, player_name) {
 	const game_doc = doc(db, "games", id);
-	updateDoc(game_doc, { players: arrayUnion(player_name) });
+	updateDoc(game_doc, { players: arrayRemove(player_name) });
+	console.log("left game: " + id);
 }
 
-function CreateGame() {
+function CreateGame(props) {
 	return (
 		<button
 			onClick={() => {
-				create_game({ roles: ["morgana"] });
+				create_game(props.user, { roles: ["morgana"] });
 			}}
 		>
 			create game
@@ -83,42 +71,6 @@ function Game(props) {
 				return to lobby
 			</button>
 		</>
-	);
-}
-
-function GameList(props) {
-	const [games, setGames] = useState([]);
-	useEffect(() => {
-		onSnapshot(q, (snapshot) => {
-			setGames(
-				snapshot.docs.map((doc) => ({
-					id: doc.id,
-					item: doc.data(),
-				}))
-			);
-		});
-	}, []);
-
-	return (
-		<div>
-			test:
-			{games.map((game) => {
-				return (
-					<div key={game.id}>
-						id: {game.id} players: {game.item.player_count}
-						<button
-							onClick={() => {
-								join_game(game.id);
-								console.log(game.id);
-								props.sgid(game.id);
-							}}
-						>
-							join
-						</button>
-					</div>
-				);
-			})}
-		</div>
 	);
 }
 const auth = getAuth();
@@ -160,11 +112,107 @@ function App() {
 		<div className="App">
 			<header className="App-header">
 				<p>avalon {display_name}</p>
-				<CreateGame />
-				{game_id === "" ? <GameList sgid={set_game_id} /> : <Game id={game_id} sgid={set_game_id} />}
+				<CreateGame user={display_name} />
+				{game_id === "" ? <RoomList sgid={set_game_id} /> : <Game id={game_id} sgid={set_game_id} />}
 			</header>
 		</div>
 	);
 }
 
-export default App;
+function update_display_name(id, name) {
+	console.log(id);
+	console.log(name);
+	updateDoc(doc(db, "users", id), { display_name: name });
+}
+
+function Menu(props) {
+	return (
+		<Space direction="vertical" size={20} style={{ width: "100%" }}>
+			<Row />
+			<Row>
+				<Col span={4} offset={10} style={{ textAlign: "center" }}>
+					<Space>
+						<Input addonBefore="display name:" onChange={(e) => props.set_display_name(e.target.value)} />
+						<Button
+							type="primary"
+							onClick={() => {
+								update_display_name(props.user_id, props.display_name);
+							}}
+						>
+							update
+						</Button>
+					</Space>
+				</Col>
+			</Row>
+			<Row>
+				<Col span={24} style={{ textAlign: "center" }}>
+					<h1>avalon test 1</h1>
+				</Col>
+			</Row>
+			<Row>
+				<Col span={6} offset={6}>
+					<h1>avalon test 1</h1>
+				</Col>
+				<Col span={6}>
+					<h1>avalon test 5</h1>
+				</Col>
+			</Row>
+		</Space>
+	);
+}
+
+function GameRoom(props) {}
+
+function Avalon() {
+	const [room_id, set_room_id] = useState("");
+	const [user_id, set_user_id] = useState("");
+	const [display_name, set_display_name] = useState("");
+
+	// when the page first loads, create a user id
+	useEffect(() => {
+		// set up a hook for when the sign in works
+		onAuthStateChanged(auth, (user) => {
+			// when they sign in
+			if (user) {
+				// set the id stored in the app
+				set_user_id(user.uid);
+				console.log("user:" + user.uid);
+
+				// get their info from the database
+				let user_info = doc(db, "users", user.uid);
+				getDoc(user_info).then((snapshot) => {
+					if (snapshot.exists()) {
+						// if the user already exists, get the display name from the server
+						console.log("found name");
+						const data = snapshot.data();
+						set_display_name(data.display_name);
+						// if they are already in a game, put them into that room automatically
+						if (data.current_room !== "") {
+							set_room_id(data.current_room);
+						}
+					} else {
+						console.log("added user");
+						setDoc(user_info, { current_room: "", display_name: user.uid });
+						set_display_name(user.uid);
+					}
+				});
+			}
+		});
+		// attempt an "anonymous" sign in
+		signInAnonymously(auth)
+			.then(() => {
+				console.log("successfully signed in");
+			})
+			.catch((error) => {
+				console.err("error signing in:" + error.code + error.message);
+			});
+	}, []);
+	console.log("room id:" + room_id);
+	return room_id === undefined || room_id === "" ? (
+		<Menu display_name={display_name} set_display_name={set_display_name} user_id={user_id} />
+	) : (
+		<GameRoom />
+	);
+}
+
+export default Avalon;
