@@ -12,14 +12,13 @@ import {
 import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import React, { useState, useEffect } from "react";
 
-import { Space, Row, Col, Input, Button } from "antd";
 import "antd/dist/antd.dark.min.css";
 
-import RoomList from "./components/RoomList";
+import Menu from "./components/menu/menu";
 import db from "./firebase";
 
 function create_game(creator, data) {
-	addDoc(collection(db, "games"), {
+	addDoc(collection(db, "rooms"), {
 		creator: creator,
 		created: serverTimestamp(),
 		players: [],
@@ -75,101 +74,17 @@ function Game(props) {
 }
 const auth = getAuth();
 
-function App() {
-	const [game_id, set_game_id] = useState("");
-	//const [user_id, set_user_id] = useState("");
-	const [display_name, set_display_name] = useState("");
-
-	useEffect(() => {
-		onAuthStateChanged(auth, (user) => {
-			if (user) {
-				//set_user_id(user.uid);
-				console.log("user:" + user.uid);
-
-				let user_info = doc(db, "users", user.uid);
-				getDoc(user_info).then((snapshot) => {
-					if (snapshot.exists()) {
-						console.log("found name");
-						set_display_name(snapshot.data().display_name);
-					} else {
-						console.log("added user");
-						setDoc(user_info, { display_name: user.uid });
-						set_display_name(user.uid);
-					}
-				});
-			}
-		});
-		signInAnonymously(auth)
-			.then(() => {
-				console.log("successfully signed in");
-			})
-			.catch((error) => {
-				console.err("error signing in:" + error.code + error.message);
-			});
-	}, []);
-
-	return (
-		<div className="App">
-			<header className="App-header">
-				<p>avalon {display_name}</p>
-				<CreateGame user={display_name} />
-				{game_id === "" ? <RoomList sgid={set_game_id} /> : <Game id={game_id} sgid={set_game_id} />}
-			</header>
-		</div>
-	);
-}
-
-function update_display_name(id, name) {
-	console.log(id);
-	console.log(name);
-	updateDoc(doc(db, "users", id), { display_name: name });
-}
-
-function Menu(props) {
-	return (
-		<Space direction="vertical" size={20} style={{ width: "100%" }}>
-			<Row />
-			<Row>
-				<Col span={4} offset={10} style={{ textAlign: "center" }}>
-					<Space>
-						<Input addonBefore="display name:" onChange={(e) => props.set_display_name(e.target.value)} />
-						<Button
-							type="primary"
-							onClick={() => {
-								update_display_name(props.user_id, props.display_name);
-							}}
-						>
-							update
-						</Button>
-					</Space>
-				</Col>
-			</Row>
-			<Row>
-				<Col span={24} style={{ textAlign: "center" }}>
-					<h1>avalon test 1</h1>
-				</Col>
-			</Row>
-			<Row>
-				<Col span={6} offset={6}>
-					<h1>avalon test 1</h1>
-				</Col>
-				<Col span={6}>
-					<h1>avalon test 5</h1>
-				</Col>
-			</Row>
-		</Space>
-	);
-}
-
 function GameRoom(props) {}
 
 function Avalon() {
 	const [room_id, set_room_id] = useState("");
 	const [user_id, set_user_id] = useState("");
+	const [user_state, set_user_state] = useState("");
 	const [display_name, set_display_name] = useState("");
 
 	// when the page first loads, create a user id
 	useEffect(() => {
+		set_room_id("");
 		// set up a hook for when the sign in works
 		onAuthStateChanged(auth, (user) => {
 			// when they sign in
@@ -191,6 +106,7 @@ function Avalon() {
 							set_room_id(data.current_room);
 						}
 					} else {
+						// add a user to the database that isn't currently in a game
 						console.log("added user");
 						setDoc(user_info, { current_room: "", display_name: user.uid });
 						set_display_name(user.uid);
@@ -207,9 +123,16 @@ function Avalon() {
 				console.err("error signing in:" + error.code + error.message);
 			});
 	}, []);
-	console.log("room id:" + room_id);
-	return room_id === undefined || room_id === "" ? (
-		<Menu display_name={display_name} set_display_name={set_display_name} user_id={user_id} />
+
+	// if we are not in a room, display the menu, if we are, display the game
+	// TODO: three states (lobby)
+	return room_id === "" ? (
+		<Menu
+			display_name={display_name}
+			set_display_name={set_display_name}
+			set_room_id={set_room_id}
+			user_id={user_id}
+		/>
 	) : (
 		<GameRoom />
 	);

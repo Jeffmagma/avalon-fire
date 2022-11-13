@@ -1,0 +1,35 @@
+import { Space, Row, Col } from "antd";
+import CreateRoomForm from "./create_room_form";
+
+import DisplayNameInput from "./DisplayNameInput";
+import RoomList from "./RoomList";
+
+export default function Menu(props) {
+	return (
+		<Space direction="vertical" size="large" style={{ width: "100%" }}>
+			<Row />
+			<Row>
+				<Col span={4} offset={10} style={{ textAlign: "center" }}>
+					<DisplayNameInput
+						display_name={props.display_name}
+						set_display_name={props.set_display_name}
+						user_id={props.user_id}
+					/>
+				</Col>
+			</Row>
+			<Row>
+				<Col span={24} style={{ textAlign: "center" }}>
+					<h1>avalon test 1</h1>
+				</Col>
+			</Row>
+			<Row>
+				<Col span={6} offset={6}>
+					<CreateRoomForm user_id={props.user_id} />
+				</Col>
+				<Col span={6}>
+					<RoomList set_room_id={props.set_room_id} />
+				</Col>
+			</Row>
+		</Space>
+	);
+}
