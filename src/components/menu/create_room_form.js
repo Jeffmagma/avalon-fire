@@ -1,9 +1,10 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { Form, Divider, InputNumber, Popover, Checkbox, Button } from "antd";
-import { UserOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { Form, Divider, Popover, Checkbox, Button } from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 
 import db from "../../firebase";
 import { roles } from "../../avalon";
+import { join_room } from "../../join_leave";
 
 function create_game(creator, form_data) {
 	console.log(form_data);
@@ -17,6 +18,8 @@ function create_game(creator, form_data) {
 		status: "lobby",
 		turn: 0,
 		votes: { 0: [true, false], 1: [false, true] },
+	}).then((doc) => {
+		join_room(creator, doc.id);
 	});
 }
 
@@ -54,26 +57,8 @@ export default function CreateRoomForm(props) {
 					create_game(props.user_id, data);
 				}}
 			>
-				<Form.Item
-					name="player_count"
-					key="player_count"
-					rules={[
-						{
-							validator: (_, value) =>
-								value ? Promise.resolve() : Promise.reject(new Error("Set player count!")),
-						},
-					]}
-				>
-					<InputNumber
-						min={2}
-						max={10}
-						key="player_count"
-						placeholder="player count"
-						addonAfter={<UserOutlined />}
-					/>
-				</Form.Item>
 				{Object.keys(roles).map((key) => {
-					if (roles[key].default == false)
+					if (!roles[key].default)
 						return (
 							<Form.Item valuePropName="checked" key={key} name={"has_" + key} value={false}>
 								<Checkbox key={key}>

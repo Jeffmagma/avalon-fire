@@ -23,11 +23,15 @@ export default function Menu(props) {
 				</Col>
 			</Row>
 			<Row>
-				<Col span={6} offset={6}>
+				<Col span={4} offset={6}>
 					<CreateRoomForm user_id={props.user_id} />
 				</Col>
-				<Col span={6}>
-					<RoomList set_room_id={props.set_room_id} />
+				<Col span={8}>
+					<RoomList
+						user_id={props.user_id}
+						set_room_id={props.set_room_id}
+						set_user_state={props.set_user_state}
+					/>
 				</Col>
 			</Row>
 		</Space>

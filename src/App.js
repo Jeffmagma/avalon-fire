@@ -9,13 +9,14 @@ import {
 	getDoc,
 	setDoc,
 } from "firebase/firestore";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
+import { signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import React, { useState, useEffect } from "react";
 
 import "antd/dist/antd.dark.min.css";
 
+import Lobby from "./components/lobby/lobby";
 import Menu from "./components/menu/menu";
-import db from "./firebase";
+import db, { auth } from "./firebase";
 
 function create_game(creator, data) {
 	addDoc(collection(db, "rooms"), {
@@ -27,12 +28,6 @@ function create_game(creator, data) {
 		turn: 0,
 		votes: { 0: [true, false], 1: [false, true] },
 	});
-}
-
-function leave_game(id, player_name) {
-	const game_doc = doc(db, "games", id);
-	updateDoc(game_doc, { players: arrayRemove(player_name) });
-	console.log("left game: " + id);
 }
 
 function CreateGame(props) {
@@ -72,19 +67,25 @@ function Game(props) {
 		</>
 	);
 }
-const auth = getAuth();
 
 function GameRoom(props) {}
 
 function Avalon() {
 	const [room_id, set_room_id] = useState("");
 	const [user_id, set_user_id] = useState("");
-	const [user_state, set_user_state] = useState("");
+	const [user_state, set_user_state] = useState("menu");
+	const [display_names, set_display_names] = useState({});
 	const [display_name, set_display_name] = useState("");
 
 	// when the page first loads, create a user id
 	useEffect(() => {
-		set_room_id("");
+		// keep track of username changes
+		const user_collection = collection(db, "users");
+		onSnapshot(user_collection, (collection) => {
+			collection.forEach((doc) => {
+				set_display_names((names) => ({ ...names, [doc.id]: doc.data().display_name }));
+			});
+		});
 		// set up a hook for when the sign in works
 		onAuthStateChanged(auth, (user) => {
 			// when they sign in
@@ -124,18 +125,30 @@ function Avalon() {
 			});
 	}, []);
 
-	// if we are not in a room, display the menu, if we are, display the game
-	// TODO: three states (lobby)
-	return room_id === "" ? (
-		<Menu
-			display_name={display_name}
-			set_display_name={set_display_name}
-			set_room_id={set_room_id}
-			user_id={user_id}
-		/>
-	) : (
-		<GameRoom />
-	);
+	switch (user_state) {
+		case "game":
+			return <GameRoom />;
+		case "lobby":
+			return (
+				<Lobby
+					room_id={room_id}
+					user_id={user_id}
+					display_names={display_names}
+					set_user_state={set_user_state}
+				/>
+			);
+		default:
+		case "menu":
+			return (
+				<Menu
+					display_name={display_name}
+					set_display_name={set_display_name}
+					set_room_id={set_room_id}
+					user_id={user_id}
+					set_user_state={set_user_state}
+				/>
+			);
+	}
 }
 
 export default Avalon;
