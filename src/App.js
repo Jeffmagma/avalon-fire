@@ -1,14 +1,4 @@
-import {
-	collection,
-	onSnapshot,
-	doc,
-	addDoc,
-	serverTimestamp,
-	updateDoc,
-	arrayRemove,
-	getDoc,
-	setDoc,
-} from "firebase/firestore";
+import { collection, onSnapshot, doc, getDoc, setDoc } from "firebase/firestore";
 import { signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import React, { useState, useEffect } from "react";
 
@@ -16,59 +6,8 @@ import "antd/dist/antd.dark.min.css";
 
 import Lobby from "./components/lobby/lobby";
 import Menu from "./components/menu/menu";
+import GameRoom from "./components/game/gameroom";
 import db, { auth } from "./firebase";
-
-function create_game(creator, data) {
-	addDoc(collection(db, "rooms"), {
-		creator: creator,
-		created: serverTimestamp(),
-		players: [],
-		roles: data.roles,
-		status: "lobby",
-		turn: 0,
-		votes: { 0: [true, false], 1: [false, true] },
-	});
-}
-
-function CreateGame(props) {
-	return (
-		<button
-			onClick={() => {
-				create_game(props.user, { roles: ["morgana"] });
-			}}
-		>
-			create game
-		</button>
-	);
-}
-
-function Game(props) {
-	const id = props.id;
-	const [data, setData] = useState({});
-	useEffect(() => {
-		onSnapshot(doc(db, "games", id), (doc) => {
-			console.log(doc.data());
-			setData(doc.data());
-		});
-	}, [id]);
-	return (
-		<>
-			{JSON.stringify(data)}
-			<button
-				onClick={() => {
-					updateDoc(doc(db, "games", id), {
-						players: arrayRemove("player_name"),
-					});
-					props.sgid("");
-				}}
-			>
-				return to lobby
-			</button>
-		</>
-	);
-}
-
-function GameRoom(props) {}
 
 function Avalon() {
 	const [room_id, set_room_id] = useState("");
