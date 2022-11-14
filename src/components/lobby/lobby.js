@@ -1,12 +1,11 @@
-import { Button, Divider, List } from "antd";
+import { Button, Divider, List, Row, Col } from "antd";
 import { onSnapshot, doc } from "firebase/firestore";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
 import db from "../../firebase";
 import { leave_room } from "../../join_leave";
 
 export default function Lobby(props) {
-	const room_id = useRef(props.room_id);
 	const [user_ids, set_user_ids] = useState([]);
 
 	useEffect(() => {
@@ -15,19 +14,32 @@ export default function Lobby(props) {
 			console.log(snapshot);
 			set_user_ids(snapshot.data().players);
 		});
-	}, []);
+	}, [props.room_id]);
 
 	return (
 		<>
-			<Divider>Lobby: {props.room_id}</Divider>
-			<List
-				bordered
-				dataSource={user_ids}
-				renderItem={(user_id) => {
-					return props.display_names[user_id];
-				}}
-			></List>
-			<Button onClick={() => leave_room(props.room_id, props.user_id, props.set_user_state)}>leave game</Button>
+			<Row gutter={[0, 16]}>
+				<Col offset={8} span={8}>
+					<Divider>Lobby: {props.room_id}</Divider>
+				</Col>
+				<Col offset={8} span={8}>
+					<List
+						bordered
+						dataSource={user_ids}
+						renderItem={(user_id) => {
+							return props.display_names[user_id];
+						}}
+					></List>
+				</Col>
+				<Col offset={8} span={8} style={{ textAlign: "center" }}>
+					<Button
+						type="primary"
+						onClick={() => leave_room(props.room_id, props.user_id, props.set_user_state)}
+					>
+						leave game
+					</Button>
+				</Col>
+			</Row>
 		</>
 	);
 }

@@ -57,16 +57,15 @@ export default function CreateRoomForm(props) {
 					create_game(props.user_id, data);
 				}}
 			>
-				{Object.keys(roles).map((key) => {
-					if (!roles[key].default)
-						return (
-							<Form.Item valuePropName="checked" key={key} name={"has_" + key} value={false}>
-								<Checkbox key={key}>
-									{key} {roles[key].info ? <RoleInfo info={roles[key]} /> : <></>}
-								</Checkbox>
-							</Form.Item>
-						);
-				})}
+				{Object.keys(roles)
+					.filter((key) => !roles[key].default)
+					.map((key) => (
+						<Form.Item valuePropName="checked" key={key} name={"has_" + key} value={false}>
+							<Checkbox key={key}>
+								{key} {roles[key].info ? <RoleInfo info={roles[key]} /> : <></>}
+							</Checkbox>
+						</Form.Item>
+					))}
 				<Form.Item key="submit">
 					<Button type="primary" htmlType="submit" key="submit">
 						Create
