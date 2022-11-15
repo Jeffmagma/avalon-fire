@@ -19,12 +19,12 @@ export default function Menu(props) {
 			</Row>
 			<Row>
 				<Col span={24} style={{ textAlign: "center" }}>
-					<h1>avalon test 1</h1>
+					<h1>avalon test</h1>
 				</Col>
 			</Row>
 			<Row>
 				<Col span={4} offset={6}>
-					<CreateRoomForm user_id={props.user_id} />
+					<CreateRoomForm user_id={props.user_id} set_user_state={props.set_user_state} />
 				</Col>
 				<Col span={8}>
 					<RoomList

@@ -6,20 +6,29 @@ import db from "../../firebase";
 import { roles } from "../../avalon";
 import { join_room } from "../../join_leave";
 
-function create_game(creator, form_data) {
-	console.log(form_data);
-	let data = {};
-	data.roles = ["morgana"];
+// create a game
+function create_game(creator, form_data, set_user_state) {
+	let roles = [];
+	for (const key in form_data) {
+		if (form_data[key]) {
+			roles.push(key.substring(4));
+		}
+	}
+	console.log("creating new game with roles:" + roles);
 	addDoc(collection(db, "rooms"), {
-		creator: creator,
-		created: serverTimestamp(),
-		players: [],
-		roles: data.roles,
-		status: "lobby",
-		turn: 0,
-		votes: { 0: [true, false], 1: [false, true] },
+		creator: creator, // who created the game
+		created: serverTimestamp(), // when it was made (sorted by this)
+		players: [], // list of user ids
+		roles: roles, // the extra roles in the game
+		status: "lobby", // the game state to broadcast to people after they join the lobby
+		game_status: "lobby", // the stage of the game itself
+		mission: 1, // avalon mission (out of 5)
+		user_turn: 0, // index of the user who's turn it is to pick a mission
+		current_mission: [], // the currently suggested team
+		fails: 0, // how many fails so far (5 = evil win)
+		votes: {}, // map of user id to their votes
 	}).then((doc) => {
-		join_room(creator, doc.id);
+		join_room(doc.id, creator, set_user_state);
 	});
 }
 
@@ -54,13 +63,13 @@ export default function CreateRoomForm(props) {
 				form={form}
 				name="new_game"
 				onFinish={(data) => {
-					create_game(props.user_id, data);
+					create_game(props.user_id, data, props.set_user_state);
 				}}
 			>
 				{Object.keys(roles)
 					.filter((key) => !roles[key].default)
 					.map((key) => (
-						<Form.Item valuePropName="checked" key={key} name={"has_" + key} value={false}>
+						<Form.Item valuePropName="checked" key={key} name={"has_" + key} initialValue={false}>
 							<Checkbox key={key}>
 								{key} {roles[key].info ? <RoleInfo info={roles[key]} /> : <></>}
 							</Checkbox>

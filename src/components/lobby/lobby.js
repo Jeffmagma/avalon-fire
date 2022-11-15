@@ -44,13 +44,23 @@ export default function Lobby(props) {
 						}}
 					></List>
 				</Col>
+
 				<Col offset={8} span={4} style={{ textAlign: "right" }}>
-					<Button
-						onClick={() => leave_room(props.room_id, props.user_id, props.set_user_state)}
-						style={{ background: "red", borderColor: "red" }}
-					>
-						leave game
-					</Button>
+					{props.user_id !== creator_id ? (
+						<Button
+							onClick={() => leave_room(props.room_id, props.user_id, props.set_user_state)}
+							style={{ background: "red", borderColor: "red" }}
+						>
+							leave game
+						</Button>
+					) : (
+						<Button
+							onClick={() => console.log("disband room")}
+							style={{ background: "red", borderColor: "red" }}
+						>
+							disband lobby room
+						</Button>
+					)}
 				</Col>
 				<Col span={4} style={{ textAlign: "left" }}>
 					<Button
