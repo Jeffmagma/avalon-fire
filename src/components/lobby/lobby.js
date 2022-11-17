@@ -48,7 +48,9 @@ export default function Lobby(props) {
 				<Col offset={8} span={4} style={{ textAlign: "right" }}>
 					{props.user_id !== creator_id ? (
 						<Button
-							onClick={() => leave_room(props.room_id, props.user_id, props.set_user_state)}
+							onClick={() =>
+								leave_room(props.room_id, props.user_id, props.set_user_state, props.set_room_id)
+							}
 							style={{ background: "red", borderColor: "red" }}
 						>
 							leave game

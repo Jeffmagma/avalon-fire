@@ -67,7 +67,14 @@ function Avalon() {
 	// render based on where in the site the user should be
 	switch (user_state) {
 		case "game":
-			return <GameRoom set_user_state={set_user_state} room_id={room_id} />;
+			return (
+				<GameRoom
+					room_id={room_id}
+					user_id={user_id}
+					set_user_state={set_user_state}
+					set_room_id={set_room_id}
+				/>
+			);
 		case "lobby":
 			return (
 				<Lobby
@@ -75,6 +82,7 @@ function Avalon() {
 					user_id={user_id}
 					display_names={display_names}
 					set_user_state={set_user_state}
+					set_room_id={set_room_id}
 				/>
 			);
 		case "menu":

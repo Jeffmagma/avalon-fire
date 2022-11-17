@@ -18,8 +18,7 @@ function render_room_item(room, user_id, set_room_id, set_user_state) {
 				<Col span={2} offset={4}>
 					<Button
 						onClick={() => {
-							join_room(room.id, user_id, set_user_state);
-							set_room_id(room.id);
+							join_room(room.id, user_id, set_user_state, set_room_id);
 						}}
 					>
 						join

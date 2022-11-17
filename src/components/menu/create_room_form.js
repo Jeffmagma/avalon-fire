@@ -7,7 +7,7 @@ import { roles } from "../../avalon";
 import { join_room } from "../../join_leave";
 
 // create a game
-function create_game(creator, form_data, set_user_state) {
+function create_game(creator, form_data, set_user_state, set_room_id) {
 	let roles = [];
 	for (const key in form_data) {
 		if (form_data[key]) {
@@ -28,7 +28,7 @@ function create_game(creator, form_data, set_user_state) {
 		fails: 0, // how many fails so far (5 = evil win)
 		votes: {}, // map of user id to their votes
 	}).then((doc) => {
-		join_room(doc.id, creator, set_user_state);
+		join_room(doc.id, creator, set_user_state, set_room_id);
 	});
 }
 
@@ -63,7 +63,7 @@ export default function CreateRoomForm(props) {
 				form={form}
 				name="new_game"
 				onFinish={(data) => {
-					create_game(props.user_id, data, props.set_user_state);
+					create_game(props.user_id, data, props.set_user_state, props.set_room_id);
 				}}
 			>
 				{Object.keys(roles)

@@ -2,7 +2,7 @@ import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import db from "./firebase";
 
 // set the current room of the player, and set the room to contain the player
-export function join_room(room_id, user_id, set_user_state) {
+export function join_room(room_id, user_id, set_user_state, set_room_id) {
 	const user_doc = doc(db, "users", user_id);
 	const game_doc = doc(db, "rooms", room_id);
 
@@ -10,11 +10,12 @@ export function join_room(room_id, user_id, set_user_state) {
 	updateDoc(game_doc, { players: arrayUnion(user_id) });
 
 	set_user_state("lobby");
+	set_room_id(room_id);
 	console.log("joined game: " + room_id);
 }
 
 // clear the current room of the player and remove the player from the list in the room
-export function leave_room(room_id, user_id, set_user_state) {
+export function leave_room(room_id, user_id, set_user_state, set_room_id) {
 	const user_doc = doc(db, "users", user_id);
 	const game_doc = doc(db, "rooms", room_id);
 
@@ -22,5 +23,6 @@ export function leave_room(room_id, user_id, set_user_state) {
 	updateDoc(game_doc, { players: arrayRemove(user_id) });
 
 	set_user_state("menu");
+	set_room_id("");
 	console.log("left game: " + room_id);
 }
