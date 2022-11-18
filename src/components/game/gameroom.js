@@ -9,9 +9,10 @@ export default function GameRoom(props) {
 
 	useEffect(() => {
 		const game_doc = doc(db, "rooms", props.room_id);
-		onSnapshot(game_doc, (doc) => {
+		const unsubscribe = onSnapshot(game_doc, (doc) => {
 			set_game(doc.data());
 		});
+		return unsubscribe;
 	});
 
 	return (

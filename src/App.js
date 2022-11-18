@@ -8,6 +8,7 @@ import Lobby from "./components/lobby/lobby";
 import Menu from "./components/menu/menu";
 import GameRoom from "./components/game/gameroom";
 import db, { auth } from "./firebase";
+import { join_room } from "./join_leave";
 
 function Avalon() {
 	const [room_id, set_room_id] = useState("");
@@ -43,7 +44,7 @@ function Avalon() {
 						set_display_name(data.display_name);
 						// if they are already in a game, put them into that room automatically
 						if (data.current_room !== "") {
-							set_room_id(data.current_room);
+							join_room(data.current_room, user.uid, set_user_state, set_room_id);
 						}
 					} else {
 						// add a user to the database that isn't currently in a game
@@ -63,6 +64,10 @@ function Avalon() {
 				console.err("error signing in:" + error.code + error.message);
 			});
 	}, []);
+
+	useEffect(() => {
+		console.log("state is now:" + user_state);
+	}, [user_state]);
 
 	// render based on where in the site the user should be
 	switch (user_state) {

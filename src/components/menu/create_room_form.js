@@ -20,7 +20,7 @@ function create_game(creator, form_data, set_user_state, set_room_id) {
 		created: serverTimestamp(), // when it was made (sorted by this)
 		players: [], // list of user ids
 		roles: roles, // the extra roles in the game
-		status: "lobby", // the game state to broadcast to people after they join the lobby
+		status: "lobby", // the game state to broadcast to people after they join the lobby (menu, lobby, game)
 		game_status: "lobby", // the stage of the game itself
 		mission: 1, // avalon mission (out of 5)
 		user_turn: 0, // index of the user who's turn it is to pick a mission

@@ -15,9 +15,9 @@ export default function Lobby(props) {
 	const [creator_id, set_creator_id] = useState("");
 
 	useEffect(() => {
-		let game_doc = doc(db, "rooms", props.room_id);
+		const game_doc = doc(db, "rooms", props.room_id);
 		getDoc(game_doc).then((doc) => set_creator_id(doc.data().creator));
-		onSnapshot(game_doc, (snapshot) => {
+		const unsubscribe = onSnapshot(game_doc, (snapshot) => {
 			console.log(snapshot.data().status);
 			if (["menu", "game"].includes(snapshot.data().status)) {
 				props.set_user_state(snapshot.data().status);
@@ -25,6 +25,8 @@ export default function Lobby(props) {
 				set_user_ids(snapshot.data().players);
 			}
 		});
+
+		return unsubscribe;
 	}, [props]);
 
 	return (
