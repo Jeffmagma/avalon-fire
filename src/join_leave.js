@@ -1,6 +1,16 @@
 import { doc, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
 import db from "./firebase";
 
+export function shuffle(array) {
+	let current_index = array.length;
+	while (current_index != 0) {
+		const random_index = Math.floor(Math.random() * current_index);
+		current_index--;
+
+		[array[current_index], array[random_index]] = [array[random_index], array[current_index]];
+	}
+}
+
 // set the current room of the player, and set the room to contain the player
 export function join_room(room_id, user_id, set_user_state, set_room_id) {
 	const user_doc = doc(db, "users", user_id);

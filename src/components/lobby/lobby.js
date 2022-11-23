@@ -3,10 +3,22 @@ import { onSnapshot, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import db from "../../firebase";
-import { leave_room } from "../../join_leave";
+import { leave_room, shuffle } from "../../join_leave";
+
+// set up the game based on the amount of players and starting data
+function setup_game(game) {
+	const players = game.players;
+	for (let i = 0; i < 5; i++) {
+		shuffle(players);
+		console.log(players);
+	}
+}
 
 function start_game(room_id) {
 	const room_doc = doc(db, "rooms", room_id);
+	getDoc(doc).then((data) => {
+		setup_game(data.data());
+	});
 	updateDoc(room_doc, { status: "game" });
 }
 
