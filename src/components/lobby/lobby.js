@@ -4,22 +4,48 @@ import { useEffect, useState } from "react";
 
 import db from "../../firebase";
 import { leave_room, shuffle } from "../../join_leave";
+import { roles } from "../../avalon";
 
 // set up the game based on the amount of players and starting data
-function setup_game(game) {
-	const players = game.players;
-	for (let i = 0; i < 5; i++) {
-		shuffle(players);
-		console.log(players);
+function generate_setup_data(game) {
+	// randomize the player order
+	shuffle(game.players);
+	// count number of good and bad special roles
+	let good = 0,
+		evil = 0;
+	for (const role in game.roles) {
+		if (roles[role].good) {
+			good++;
+		} else {
+			evil++;
+		}
 	}
+	const num_players = game.players.length;
+	const total_evil = Math.ceil(num_players / 3);
+	// fill remaining slots with generic roles
+	game.roles = [
+		...game.roles,
+		...Array(total_evil - evil).fill("evil"),
+		...Array(num_players - total_evil - good).fill("good"),
+	];
+	shuffle(game.roles);
+	// TODO
+	console.log(game.players);
+	console.log(game.roles);
+	return {
+		players: game.players,
+		roles: game.roles,
+		status: "game",
+	};
 }
 
 function start_game(room_id) {
 	const room_doc = doc(db, "rooms", room_id);
-	getDoc(doc).then((data) => {
-		setup_game(data.data());
+	getDoc(room_doc).then((data) => {
+		console.log(data);
+		const setup_data = generate_setup_data(data.data());
+		updateDoc(room_doc, setup_data);
 	});
-	updateDoc(room_doc, { status: "game" });
 }
 
 export default function Lobby(props) {
@@ -53,9 +79,7 @@ export default function Lobby(props) {
 					<List
 						bordered
 						dataSource={user_ids}
-						renderItem={(user_id) => {
-							return props.display_names[user_id];
-						}}
+						renderItem={(user_id) => <List.Item>{props.display_names[user_id]}</List.Item>}
 					></List>
 				</Col>
 

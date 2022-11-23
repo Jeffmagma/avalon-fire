@@ -1,5 +1,5 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { Form, Divider, Popover, Checkbox, Button } from "antd";
+import { Form, Divider, Popover, Checkbox, Button, Tag } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 
 import db from "../../firebase";
@@ -47,7 +47,7 @@ function RoleInfo(props) {
 					))}
 				</>
 			}
-			title={role.good ? "good" : "evil"}
+			title={role.good ? <Tag color="green">good</Tag> : <Tag color="red">evil</Tag>}
 		>
 			<QuestionCircleOutlined />
 		</Popover>

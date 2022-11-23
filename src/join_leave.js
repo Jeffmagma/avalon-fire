@@ -3,7 +3,7 @@ import db from "./firebase";
 
 export function shuffle(array) {
 	let current_index = array.length;
-	while (current_index != 0) {
+	while (current_index !== 0) {
 		const random_index = Math.floor(Math.random() * current_index);
 		current_index--;
 
