@@ -25,14 +25,22 @@ function generate_setup_data(game) {
 	// fill remaining slots with generic roles
 	game.roles = [
 		...game.roles,
+		"merlin",
 		...Array(total_evil - evil).fill("evil"),
-		...Array(num_players - total_evil - good).fill("good"),
+		...Array(num_players - total_evil - good - 1).fill("good"),
 	];
 	shuffle(game.roles);
 	// TODO
-	console.log(game.players);
-	console.log(game.roles);
+	const user_roles = Object.fromEntries(keys.map((_, i) => [game.players[i], game.roles[i]]));
+	let user_data = {};
+	user_roles.forEach((user, role) => {
+		user_data[user] = user_roles.map((user, role) => {
+			roles[role].good ? "good" : "evil";
+		});
+	});
+	// return the new data
 	return {
+		user_data: user_roles,
 		players: game.players,
 		roles: game.roles,
 		status: "game",
