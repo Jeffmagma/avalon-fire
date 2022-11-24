@@ -31,12 +31,11 @@ function generate_setup_data(game) {
 	];
 	shuffle(game.roles);
 	// TODO
-	const user_roles = Object.fromEntries(keys.map((_, i) => [game.players[i], game.roles[i]]));
+	const user_roles = Object.fromEntries(game.roles.map((_, i) => [game.players[i], game.roles[i]]));
 	let user_data = {};
 	user_roles.forEach((user, role) => {
-		user_data[user] = user_roles.map((user, role) => {
-			roles[role].good ? "good" : "evil";
-		});
+		switch (role) {
+		}
 	});
 	// return the new data
 	return {

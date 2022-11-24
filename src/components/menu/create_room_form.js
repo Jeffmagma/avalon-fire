@@ -1,9 +1,9 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { Form, Divider, Popover, Checkbox, Button, Tag } from "antd";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import { Form, Divider, Checkbox, Button } from "antd";
+import RoleInfo from "./roleinfo";
 
 import db from "../../firebase";
-import { roles } from "../../avalon";
+import { roles2 } from "../../avalon";
 import { join_room } from "../../join_leave";
 
 // create a game
@@ -11,7 +11,7 @@ function create_game(creator, form_data, set_user_state, set_room_id) {
 	let roles = [];
 	for (const key in form_data) {
 		if (form_data[key]) {
-			roles.push(key.substring(4));
+			roles.push(key);
 		}
 	}
 	console.log("creating new game with roles:" + roles);
@@ -20,38 +20,11 @@ function create_game(creator, form_data, set_user_state, set_room_id) {
 		created: serverTimestamp(), // when it was made (sorted by this)
 		players: [], // list of user ids
 		roles: roles, // the extra roles in the game
-		status: "lobby", // the game state to broadcast to people after they join the lobby (menu, lobby, game)
+		status: "lobby", // the game state to broadcast to people in the room (menu, lobby, game)
 		game_status: "lobby", // the stage of the game itself
-		mission: 1, // avalon mission (out of 5)
-		user_turn: 0, // index of the user who's turn it is to pick a mission
-		current_mission: [], // the currently suggested team
-		fails: 0, // how many fails so far (5 = evil win)
-		votes: {}, // map of user id to their votes
 	}).then((doc) => {
 		join_room(doc.id, creator, set_user_state, set_room_id);
 	});
-}
-
-function RoleInfo(props) {
-	let role = props.info;
-	return (
-		<Popover
-			placement="right"
-			content={
-				<>
-					{role.info.map((x) => (
-						<div key={x}>
-							{x}
-							<br />
-						</div>
-					))}
-				</>
-			}
-			title={role.good ? <Tag color="green">good</Tag> : <Tag color="red">evil</Tag>}
-		>
-			<QuestionCircleOutlined />
-		</Popover>
-	);
 }
 
 export default function CreateRoomForm(props) {
@@ -66,12 +39,12 @@ export default function CreateRoomForm(props) {
 					create_game(props.user_id, data, props.set_user_state, props.set_room_id);
 				}}
 			>
-				{Object.keys(roles)
-					.filter((key) => !roles[key].default)
+				{Object.keys(roles2)
+					.filter((key) => roles2[key].optional)
 					.map((key) => (
-						<Form.Item valuePropName="checked" key={key} name={"has_" + key} initialValue={false}>
+						<Form.Item valuePropName="checked" key={key} name={key} initialValue={false}>
 							<Checkbox key={key}>
-								{key} {roles[key].info ? <RoleInfo info={roles[key]} /> : <></>}
+								{key} <RoleInfo info={roles2[key]} />
 							</Checkbox>
 						</Form.Item>
 					))}
