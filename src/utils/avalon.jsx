@@ -1,4 +1,4 @@
-export const roles2 = {
+export const roles = {
 	good: {
 		side: "good",
 		optional: false,
@@ -8,7 +8,7 @@ export const roles2 = {
 		side: "evil",
 		optional: false,
 		view_role: (role) => {
-			if (roles2[role].side === "good" || role === "oberon") {
+			if (roles[role].side === "good" || role === "oberon") {
 				return "good";
 			} else {
 				return "evil";
@@ -19,7 +19,7 @@ export const roles2 = {
 		side: "good",
 		optional: false,
 		view_role: (role) => {
-			if (roles2[role].side === "good" || role === "mordred") {
+			if (roles[role].side === "good" || role === "mordred") {
 				return "good";
 			} else {
 				return "evil";
@@ -30,7 +30,7 @@ export const roles2 = {
 		side: "evil",
 		optional: false,
 		view_role: (role) => {
-			if (roles2[role].side === "good" || role === "oberon") {
+			if (roles[role].side === "good" || role === "oberon") {
 				return "good";
 			} else {
 				return "evil";
@@ -54,66 +54,21 @@ export const roles2 = {
 		side: "evil",
 		helps: "evil",
 		optional: true,
-		view_role: (role) => roles2["evil"].view_role(role),
+		view_role: (role) => roles["evil"].view_role(role),
 		info: ["morgana appears to percival as merlins alongside the real merlin"],
 	},
 	mordred: {
 		side: "evil",
 		helps: "evil",
 		optional: true,
-		view_role: (role) => roles2["evil"].view_role(role),
+		view_role: (role) => roles["evil"].view_role(role),
 		info: ["mordred does not appear to merlin as evil"],
 	},
 	oberon: {
 		side: "evil",
 		helps: "good",
 		optional: true,
-		view_role: (role) => roles2["good"].view_role(role),
+		view_role: (role) => roles["good"].view_role(role),
 		info: ["oberon does not know who else is evil, and the other evil players do not know that he is evil"],
-	},
-};
-
-export const roles = {
-	good: {
-		good: true,
-		default: true,
-	},
-	evil: {
-		good: true,
-		default: true,
-	},
-	merlin: {
-		good: true,
-		default: true,
-	},
-	assassin: {
-		good: false,
-		default: true,
-	},
-	percival: {
-		good: true,
-		default: false,
-		info: ["percival knows who merlin is", "percival increases the likelihood of good to win"],
-	},
-	morgana: {
-		good: false,
-		default: false,
-		info: [
-			"morgana appears to percival as merlin alongside the real merlin",
-			"morgana increases the likelihood of evil to win",
-		],
-	},
-	mordred: {
-		good: false,
-		default: false,
-		info: ["mordred does not appear to merlin as evil", "mordred increases the likelihood of evil to win"],
-	},
-	oberon: {
-		good: false,
-		default: false,
-		info: [
-			"oberon does not know who else is evil, and the other evil players do not know that he is evil",
-			"oberon increases the likelihood of good to win",
-		],
 	},
 };

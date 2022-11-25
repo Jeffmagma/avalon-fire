@@ -13,23 +13,30 @@ function generate_setup_data(game) {
 	// count number of good and bad special roles
 	let good = 0,
 		evil = 0;
-	for (const role in game.roles) {
-		if (roles[role].good) {
+	game.roles.forEach((role) => {
+		console.log(role);
+		if (roles[role].side === "good") {
 			good++;
 		} else {
 			evil++;
 		}
+	});
+	const num_players = game.players.length;
+	// for testing only!
+	if (num_players <= 2) {
+		game.roles = ["good", "evil"];
+	} else {
+		const total_evil = Math.ceil(num_players / 3);
+		// fill remaining slots with generic roles
+		game.roles = [
+			...game.roles,
+			"merlin",
+			...Array(total_evil - evil).fill("evil"),
+			...Array(num_players - total_evil - good - 1).fill("good"),
+		];
+		shuffle(game.roles);
 	}
-	const num_players = game.players.length + 10;
-	const total_evil = Math.ceil(num_players / 3);
-	// fill remaining slots with generic roles
-	game.roles = [
-		...game.roles,
-		"merlin",
-		...Array(total_evil - evil).fill("evil"),
-		...Array(num_players - total_evil - good - 1).fill("good"),
-	];
-	shuffle(game.roles);
+
 	// TODO
 	const user_roles = Object.fromEntries(game.roles.map((_, i) => [game.players[i], game.roles[i]]));
 	let user_data = {};

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 
 import Lobby from "./components/lobby/lobby";
 import Menu from "./components/menu/menu";
-import GameRoom from "./components/game/gameroom";
+import GameRoom from "./components/game/game_room";
 import db, { auth } from "./utils/firebase";
 import { join_room } from "./utils/join_leave";
 

@@ -3,7 +3,7 @@ import { Form, Divider, Checkbox, Button } from "antd";
 import RoleInfo from "./roleinfo";
 
 import db from "../../utils/firebase";
-import { roles2 } from "../../utils/avalon";
+import { roles } from "../../utils/avalon";
 import { join_room } from "../../utils/join_leave";
 
 // create a game
@@ -39,12 +39,12 @@ export default function CreateRoomForm(props) {
 					create_game(props.user_id, data, props.set_user_state, props.set_room_id);
 				}}
 			>
-				{Object.keys(roles2)
-					.filter((key) => roles2[key].optional)
+				{Object.keys(roles)
+					.filter((key) => roles[key].optional)
 					.map((key) => (
 						<Form.Item valuePropName="checked" key={key} name={key} initialValue={false}>
 							<Checkbox key={key}>
-								{key} <RoleInfo info={roles2[key]} />
+								{key} <RoleInfo info={roles[key]} />
 							</Checkbox>
 						</Form.Item>
 					))}
