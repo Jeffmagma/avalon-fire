@@ -1,8 +1,8 @@
 import { Space, Row, Col } from "antd";
 import CreateRoomForm from "./create_room_form";
 
-import DisplayNameInput from "./DisplayNameInput";
-import RoomList from "./RoomList";
+import DisplayNameInput from "./displayname_input";
+import RoomList from "./room_list";
 
 export default function Menu(props) {
 	return (
