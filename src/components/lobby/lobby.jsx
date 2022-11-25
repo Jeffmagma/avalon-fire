@@ -36,21 +36,25 @@ function generate_setup_data(game) {
 		];
 		shuffle(game.roles);
 	}
-
-	// TODO
-	const user_roles = Object.fromEntries(game.roles.map((_, i) => [game.players[i], game.roles[i]]));
+	const user_roles = Object.fromEntries(game.players.map((_, i) => [game.players[i], game.roles[i]]));
 	console.log(user_roles);
-	let user_data_entries = Object.entries(user_roles).map(([user, role]) => [
-		user,
-		game.roles.map((player_role) => roles[role].view_role(player_role)),
-	]);
-	console.log(user_data_entries);
-	console.log(Object.fromEntries(user_data_entries));
+	const user_data = Object.fromEntries(
+		Object.entries(user_roles).map(([user, role]) => [
+			user,
+			Object.fromEntries(
+				Object.entries(user_roles).map(([role_user, user_role]) => [
+					role_user,
+					roles[role].view_role(user_role),
+				])
+			),
+		])
+	);
+	// TODO
+	console.log(user_data);
 	// return the new data
 	return {
-		user_data: user_roles,
-		players: game.players,
-		roles: game.roles,
+		user_data: user_data,
+		user_roles: user_roles,
 		status: "game",
 	};
 }

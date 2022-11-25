@@ -40,7 +40,7 @@ export default function GameRoom(props) {
 				leave room
 			</Button>
 			<Button onClick={() => end_game(props.room_id)}>end game</Button>
-			<br /> {JSON.stringify(game)}
+			<br /> {JSON.stringify(game.user_data[props.user_id])}
 		</>
 	);
 }
