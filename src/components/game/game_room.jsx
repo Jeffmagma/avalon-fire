@@ -25,6 +25,7 @@ export default function GameRoom(props) {
 		const unsubscribe = onSnapshot(game_doc, (doc) => {
 			set_game(doc.data());
 			if (doc.data().status === "menu") {
+				props.set_room_id("");
 				props.set_user_state("menu");
 			}
 		});

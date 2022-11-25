@@ -39,7 +39,13 @@ function generate_setup_data(game) {
 
 	// TODO
 	const user_roles = Object.fromEntries(game.roles.map((_, i) => [game.players[i], game.roles[i]]));
-	let user_data = {};
+	console.log(user_roles);
+	let user_data_entries = Object.entries(user_roles).map(([user, role]) => [
+		user,
+		game.roles.map((player_role) => roles[role].view_role(player_role)),
+	]);
+	console.log(user_data_entries);
+	console.log(Object.fromEntries(user_data_entries));
 	// return the new data
 	return {
 		user_data: user_roles,

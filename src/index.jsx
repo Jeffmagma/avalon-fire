@@ -2,28 +2,30 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 
-import { Button, ConfigProvider, Switch, theme } from "antd";
+import { ConfigProvider, Row, Switch } from "antd";
 
 function ThemedApp() {
-	const [algorithm, set_algorithm] = useState({
+	const [theme, set_theme] = useState({
 		colorPrimary: "#1890ff",
 	});
 	return (
-		<ConfigProvider theme={{ token: algorithm }}>
-			<Switch
-				defaultChecked
-				onChange={(checked) => {
-					if (checked) {
-						set_algorithm({
-							colorPrimary: "#1890ff",
-						});
-					} else {
-						set_algorithm({
-							colorPrimary: "red",
-						});
-					}
-				}}
-			/>
+		<ConfigProvider theme={{ token: theme }}>
+			<Row>
+				<Switch
+					defaultChecked
+					onChange={(checked) => {
+						if (checked) {
+							set_theme({
+								colorPrimary: "#1890ff",
+							});
+						} else {
+							set_theme({
+								colorPrimary: "red",
+							});
+						}
+					}}
+				/>
+			</Row>
 			<App />
 		</ConfigProvider>
 	);
