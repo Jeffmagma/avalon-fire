@@ -2,9 +2,9 @@ import { Button, Divider, List, Row, Col } from "antd";
 import { onSnapshot, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-import db from "../../firebase";
-import { leave_room, shuffle } from "../../join_leave";
-import { roles } from "../../avalon";
+import db from "../../utils/firebase";
+import { leave_room, shuffle } from "../../utils/join_leave";
+import { roles } from "../../utils/avalon";
 
 // set up the game based on the amount of players and starting data
 function generate_setup_data(game) {
@@ -20,7 +20,7 @@ function generate_setup_data(game) {
 			evil++;
 		}
 	}
-	const num_players = game.players.length;
+	const num_players = game.players.length + 10;
 	const total_evil = Math.ceil(num_players / 3);
 	// fill remaining slots with generic roles
 	game.roles = [
@@ -33,10 +33,6 @@ function generate_setup_data(game) {
 	// TODO
 	const user_roles = Object.fromEntries(game.roles.map((_, i) => [game.players[i], game.roles[i]]));
 	let user_data = {};
-	user_roles.forEach((user, role) => {
-		switch (role) {
-		}
-	});
 	// return the new data
 	return {
 		user_data: user_roles,

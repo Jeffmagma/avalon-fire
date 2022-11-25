@@ -2,9 +2,9 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { Form, Divider, Checkbox, Button } from "antd";
 import RoleInfo from "./roleinfo";
 
-import db from "../../firebase";
-import { roles2 } from "../../avalon";
-import { join_room } from "../../join_leave";
+import db from "../../utils/firebase";
+import { roles2 } from "../../utils/avalon";
+import { join_room } from "../../utils/join_leave";
 
 // create a game
 function create_game(creator, form_data, set_user_state, set_room_id) {

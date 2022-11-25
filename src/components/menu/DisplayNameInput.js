@@ -1,7 +1,7 @@
 import { updateDoc, doc } from "firebase/firestore";
 import { Space, Input, Button } from "antd";
 
-import db from "../../firebase";
+import db from "../../utils/firebase";
 
 function update_display_name(id, name) {
 	updateDoc(doc(db, "users", id), { display_name: name });

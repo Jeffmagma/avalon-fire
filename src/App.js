@@ -2,13 +2,11 @@ import { collection, onSnapshot, doc, getDoc, setDoc } from "firebase/firestore"
 import { signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import React, { useState, useEffect } from "react";
 
-import "antd/dist/antd.dark.min.css";
-
 import Lobby from "./components/lobby/lobby";
 import Menu from "./components/menu/menu";
 import GameRoom from "./components/game/gameroom";
-import db, { auth } from "./firebase";
-import { join_room } from "./join_leave";
+import db, { auth } from "./utils/firebase";
+import { join_room } from "./utils/join_leave";
 
 function Avalon() {
 	const [room_id, set_room_id] = useState("");

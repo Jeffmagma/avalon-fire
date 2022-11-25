@@ -9,7 +9,7 @@ export default function Menu(props) {
 		<Space direction="vertical" size="large" style={{ width: "100%" }}>
 			<Row />
 			<Row>
-				<Col span={4} offset={10} style={{ textAlign: "center" }}>
+				<Col span={24} style={{ textAlign: "center" }}>
 					<DisplayNameInput
 						display_name={props.display_name}
 						set_display_name={props.set_display_name}

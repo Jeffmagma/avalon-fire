@@ -1,8 +1,9 @@
 import { Button } from "antd";
 import { onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import db from "../../firebase";
-import { leave_room } from "../../join_leave";
+
+import db from "../../utils/firebase";
+import { leave_room } from "../../utils/join_leave";
 
 function next_mission(game, room_id) {
 	const game_doc = doc(db, "rooms", room_id);

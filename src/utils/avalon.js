@@ -55,7 +55,7 @@ export const roles2 = {
 		helps: "evil",
 		optional: true,
 		view_role: (role) => roles2["evil"].view_role(role),
-		info: ["morgana appears to percival as merlin alongside the real merlin"],
+		info: ["morgana appears to percival as merlins alongside the real merlin"],
 	},
 	mordred: {
 		side: "evil",
