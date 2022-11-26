@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import db from "../../utils/firebase";
 import { leave_room, shuffle } from "../../utils/room";
 import { roles } from "../../utils/avalon";
+import { end_game } from "../game/game_room";
 
 // set up the game based on the amount of players and starting data
 function generate_setup_data(game) {
@@ -117,7 +118,7 @@ export default function Lobby(props) {
 						</Button>
 					) : (
 						<Button
-							onClick={() => console.log("disband room")}
+							onClick={() => end_game(props.room_id)}
 							style={{ background: "red", borderColor: "red" }}
 						>
 							disband lobby room

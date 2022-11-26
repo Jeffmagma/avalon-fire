@@ -8,18 +8,12 @@ import { join_room } from "../../utils/room";
 
 // create a game
 function create_game(creator, form_data, set_user_state, set_room_id) {
-	let roles = [];
-	for (const key in form_data) {
-		if (form_data[key]) {
-			roles.push(key);
-		}
-	}
-	console.log("creating new game with roles:" + roles);
+	console.log("creating new game with roles:" + form_data.roles);
 	addDoc(collection(db, "rooms"), {
 		creator: creator, // who created the game
 		created: serverTimestamp(), // when it was made (sorted by this)
 		players: [], // list of user ids
-		roles: roles, // the extra roles in the game
+		roles: form_data.roles, // the extra roles in the game
 		status: "lobby", // the game state to broadcast to people in the room (menu, lobby, game)
 		game_status: "lobby", // the stage of the game itself
 	}).then((doc) => {
@@ -39,15 +33,13 @@ export default function CreateRoomForm(props) {
 					create_game(props.user_id, data, props.set_user_state, props.set_room_id);
 				}}
 			>
-				{Object.keys(roles)
-					.filter((key) => roles[key].optional)
-					.map((key) => (
-						<Form.Item valuePropName="checked" key={key} name={key} initialValue={false}>
-							<Checkbox key={key}>
-								{key} <RoleInfo info={roles[key]} />
-							</Checkbox>
-						</Form.Item>
-					))}
+				<Form.Item name="roles">
+					<Checkbox.Group
+						options={Object.keys(roles)
+							.filter((key) => roles[key].optional)
+							.map((key) => ({ label: key, value: key }))}
+					/>
+				</Form.Item>
 				<Form.Item key="submit">
 					<Button type="primary" htmlType="submit" key="submit">
 						Create

@@ -17,7 +17,7 @@ function suggest_team(room_id, team) {
 }
 
 // end the game and disband the room
-function end_game(room_id) {
+export function end_game(room_id) {
 	const game_doc = doc(db, "rooms", room_id);
 	// set everyone back to the menu, and then delete the game
 	updateDoc(game_doc, { status: "menu" }).then(() => deleteDoc(game_doc));
