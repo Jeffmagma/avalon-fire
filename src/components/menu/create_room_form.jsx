@@ -4,7 +4,7 @@ import RoleInfo from "./roleinfo";
 
 import db from "../../utils/firebase";
 import { roles } from "../../utils/avalon";
-import { join_room } from "../../utils/join_leave";
+import { join_room } from "../../utils/room";
 
 // create a game
 function create_game(creator, form_data, set_user_state, set_room_id) {

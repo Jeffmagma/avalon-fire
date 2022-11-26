@@ -6,7 +6,7 @@ import Lobby from "./components/lobby/lobby";
 import Menu from "./components/menu/menu";
 import GameRoom from "./components/game/game_room";
 import db, { auth } from "./utils/firebase";
-import { join_room } from "./utils/join_leave";
+import { join_room } from "./utils/room";
 
 function Avalon() {
 	const [room_id, set_room_id] = useState("");

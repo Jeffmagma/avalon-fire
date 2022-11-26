@@ -3,7 +3,7 @@ import { onSnapshot, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import db from "../../utils/firebase";
-import { leave_room, shuffle } from "../../utils/join_leave";
+import { leave_room, shuffle } from "../../utils/room";
 import { roles } from "../../utils/avalon";
 
 // set up the game based on the amount of players and starting data
@@ -53,6 +53,8 @@ function generate_setup_data(game) {
 	console.log(user_data);
 	// return the new data
 	return {
+		mission: 0,
+		players: game.players,
 		user_data: user_data,
 		user_roles: user_roles,
 		status: "game",

@@ -3,7 +3,7 @@ import { query, collection, orderBy, onSnapshot } from "firebase/firestore";
 import { List, Row, Col, Button, Divider } from "antd";
 
 import db from "../../utils/firebase";
-import { join_room } from "../../utils/join_leave";
+import { join_room } from "../../utils/room";
 
 function render_room_item(room, user_id, set_room_id, set_user_state) {
 	const date = new Date(room.data.created * 1000);
