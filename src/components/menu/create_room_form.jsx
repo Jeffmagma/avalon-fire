@@ -1,5 +1,5 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { Form, Divider, Checkbox, Button } from "antd";
+import { Form, Divider, Checkbox, Button, Row, Col } from "antd";
 import RoleInfo from "./roleinfo";
 
 import db from "../../utils/firebase";
@@ -8,6 +8,7 @@ import { join_room } from "../../utils/room";
 
 // create a game
 function create_game(creator, form_data, set_user_state, set_room_id) {
+	console.log(form_data);
 	console.log("creating new game with roles:" + form_data.roles);
 	addDoc(collection(db, "rooms"), {
 		creator: creator, // who created the game
@@ -34,12 +35,19 @@ export default function CreateRoomForm(props) {
 				}}
 			>
 				<Form.Item name="roles">
-					<Checkbox.Group
-						options={Object.keys(roles)
+					<Checkbox.Group>
+						{Object.keys(roles)
 							.filter((key) => roles[key].optional)
-							.map((key) => ({ label: key, value: key }))}
-					/>
+							.map((key) => (
+								<Row>
+									<Checkbox key={key} value={key}>
+										{key} <RoleInfo info={roles[key]} />
+									</Checkbox>
+								</Row>
+							))}
+					</Checkbox.Group>
 				</Form.Item>
+
 				<Form.Item key="submit">
 					<Button type="primary" htmlType="submit" key="submit">
 						Create

@@ -1,4 +1,4 @@
-import { collection, onSnapshot, doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, onSnapshot, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import React, { useState, useEffect } from "react";
 
@@ -64,6 +64,12 @@ function Avalon() {
 	}, []);
 
 	useEffect(() => {
+		const user_doc = doc(db, "users", user_id);
+		if (user_state === "menu") {
+			updateDoc(user_doc, { current_room: "" });
+		} else {
+			updateDoc(user_doc, { current_room: room_id });
+		}
 		console.log("state is now:" + user_state);
 	}, [user_state]);
 
@@ -76,6 +82,7 @@ function Avalon() {
 					user_id={user_id}
 					set_user_state={set_user_state}
 					set_room_id={set_room_id}
+					display_names={display_names}
 				/>
 			);
 		case "lobby":

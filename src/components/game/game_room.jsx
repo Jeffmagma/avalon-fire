@@ -1,9 +1,10 @@
-import { Button } from "antd";
+import { Button, Checkbox, Skeleton } from "antd";
 import { onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import db from "../../utils/firebase";
 import { leave_room } from "../../utils/room";
+import TeamSelect from "./team_select";
 
 function next_mission(game, room_id) {
 	const game_doc = doc(db, "rooms", room_id);
@@ -56,10 +57,11 @@ export default function GameRoom(props) {
 						leave room
 					</Button>
 					<Button onClick={() => end_game(props.room_id)}>end game</Button>
+					<TeamSelect />
 					<br /> {JSON.stringify(game.user_data[props.user_id])}
 				</>
 			) : (
-				<></>
+				<Skeleton />
 			)}
 		</>
 	);
