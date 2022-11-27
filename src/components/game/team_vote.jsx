@@ -1,12 +1,28 @@
 import { Button, List } from "antd";
+import { doc, updateDoc } from "firebase/firestore";
+import db from "../../utils/firebase";
 
 export default function TeamVote(props) {
-	const { game, display_names } = props;
+	const { game, display_names, room_id, user_id } = props;
+
+	function vote(result) {
+		const game_doc = doc(db, "rooms", room_id);
+		if (Object.values(game.votes).filter((votes) => votes.length - 1 < game.current_turn).length === 1) {
+			updateDoc(game_doc, { game_status: "mission" });
+		}
+		updateDoc(game_doc, { ["votes." + user_id]: [...game.votes[user_id], result] });
+		// if there are no more users that still need to vote
+	}
+
 	return game.game_status === "vote" ? (
 		<>
 			<List dataSource={game.current_team} renderItem={(x) => <List.Item>{display_names[x]}</List.Item>} />
-			<Button onClick={() => console.log("approve")}>approve</Button>
-			<Button onClick={() => console.log("deny")}>deny</Button>
+			<Button disabled={game.votes[user_id].length - 1 === game.current_turn} onClick={() => vote(true)}>
+				approve
+			</Button>
+			<Button disabled={game.votes[user_id].length - 1 === game.current_turn} onClick={() => vote(false)}>
+				deny
+			</Button>
 		</>
 	) : (
 		<>no team to vote on!</>

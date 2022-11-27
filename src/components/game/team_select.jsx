@@ -23,7 +23,7 @@ export default function TeamSelect(props) {
 				<Checkbox.Group onChange={(selected) => set_selected(selected)}>
 					{game.players.map((id) => (
 						<Row>
-							<Checkbox value={id} disabled={!selected.includes(id) && selected.length >= 1}>
+							<Checkbox key={id} value={id} disabled={!selected.includes(id) && selected.length >= 1}>
 								{display_names[id]}
 							</Checkbox>
 						</Row>

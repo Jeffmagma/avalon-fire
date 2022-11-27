@@ -13,7 +13,6 @@ function generate_setup_data(game) {
 	let good = 0,
 		evil = 0;
 	game.roles.forEach((role) => {
-		console.log(role);
 		if (roles[role].side === "good") {
 			good++;
 		} else {
@@ -26,7 +25,7 @@ function generate_setup_data(game) {
 		game.roles = ["good", "evil"];
 	} else {
 		const total_evil = Math.ceil(num_players / 3);
-		// fill remaining slots with generic roles
+		// fill remaining slots with merlin and generic roles
 		game.roles = [
 			...game.roles,
 			"merlin",
@@ -53,21 +52,25 @@ function generate_setup_data(game) {
 		])
 	);
 	console.log(user_data);
+	// create an object to keep track of each players votes
+	const player_votes = Object.fromEntries(game.players.map((_, i) => [game.players[i], []]));
 	// return the new data that should be pushed to the game room
 	return {
-		mission: 0,
+		current_turn: 0,
+		current_player: 0,
+		mission: 1,
 		players: game.players,
 		user_data: user_data,
 		user_roles: user_roles,
 		status: "game",
 		game_status: "select",
+		votes: player_votes,
 	};
 }
 
 function start_game(room_id) {
 	const room_doc = doc(db, "rooms", room_id);
 	getDoc(room_doc).then((data) => {
-		console.log(data);
 		const setup_data = generate_setup_data(data.data());
 		updateDoc(room_doc, setup_data);
 	});
@@ -81,7 +84,6 @@ export default function Lobby(props) {
 		const game_doc = doc(db, "rooms", props.room_id);
 		getDoc(game_doc).then((doc) => set_creator_id(doc.data().creator));
 		const unsubscribe = onSnapshot(game_doc, (snapshot) => {
-			console.log(snapshot.data().status);
 			if (["menu", "game"].includes(snapshot.data().status)) {
 				props.set_user_state(snapshot.data().status);
 			} else {
