@@ -35,3 +35,4 @@ export function leave_room(room_id, user_id, set_user_state, set_room_id) {
 
 	console.log("left game: " + room_id);
 }
+// TODO i'm pretty sure i can refactor this a little bit more

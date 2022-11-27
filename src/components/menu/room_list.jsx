@@ -14,15 +14,19 @@ function render_room_item(room, user_id, set_room_id, set_user_state) {
 				<Col span={12}>
 					ID:{room.id} time:{date.getHours()}:{date.getMinutes()}
 				</Col>
-				<Col span={6}>/{room.data.players.length}</Col>
-				<Col span={2} offset={4}>
-					<Button
-						onClick={() => {
-							join_room(room.id, user_id, set_user_state, set_room_id);
-						}}
-					>
-						join
-					</Button>
+				<Col span={6}>players:{room.data.players.length}</Col>
+				<Col span={6}>
+					{room.data.status === "game" ? (
+						<Button disabled>in game</Button>
+					) : (
+						<Button
+							onClick={() => {
+								join_room(room.id, user_id, set_user_state, set_room_id);
+							}}
+						>
+							join
+						</Button>
+					)}
 				</Col>
 			</Row>
 		</List.Item>

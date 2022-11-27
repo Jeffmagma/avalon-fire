@@ -34,7 +34,7 @@ export default function CreateRoomForm(props) {
 					create_game(props.user_id, data, props.set_user_state, props.set_room_id);
 				}}
 			>
-				<Form.Item name="roles">
+				<Form.Item name="roles" initialValue={[]}>
 					<Checkbox.Group>
 						{Object.keys(roles)
 							.filter((key) => roles[key].optional)

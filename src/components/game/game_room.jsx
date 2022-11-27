@@ -11,12 +11,6 @@ function next_mission(game, room_id) {
 	updateDoc(game_doc, { mission: (game.mission + 1) % game.players.length });
 }
 
-// suggest a team, team is an array of player ids
-function suggest_team(room_id, team) {
-	const game_doc = doc(db, "rooms", room_id);
-	updateDoc(game_doc, { status: "suggest_team", current_team: team });
-}
-
 // end the game and disband the room
 export function end_game(room_id) {
 	const game_doc = doc(db, "rooms", room_id);
@@ -57,7 +51,7 @@ export default function GameRoom(props) {
 						leave room
 					</Button>
 					<Button onClick={() => end_game(props.room_id)}>end game</Button>
-					<TeamSelect />
+					<TeamSelect game={game} display_names={props.display_names} />
 					<br /> {JSON.stringify(game.user_data[props.user_id])}
 				</>
 			) : (

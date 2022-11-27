@@ -64,6 +64,7 @@ function Avalon() {
 	}, []);
 
 	useEffect(() => {
+		if (user_id === "") return;
 		const user_doc = doc(db, "users", user_id);
 		if (user_state === "menu") {
 			updateDoc(user_doc, { current_room: "" });
