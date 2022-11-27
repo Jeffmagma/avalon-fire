@@ -1,21 +1,24 @@
 import { Checkbox, Form, Row, Button } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useState } from "react";
+import { doc, updateDoc } from "firebase/firestore";
+
+import db from "../../utils/firebase";
 
 // suggest a team, team is an array of player ids
-function suggest_team(room_id, team) {
+function suggest_team(room_id, form_data) {
 	const game_doc = doc(db, "rooms", room_id);
-	updateDoc(game_doc, { status: "suggest_team", current_team: team });
+	updateDoc(game_doc, { game_status: "vote", current_team: form_data.players });
 }
 
 export default function TeamSelect(props) {
-	const { game, display_names } = props;
+	const { game, display_names, room_id } = props;
 
 	const [form] = useForm();
 	const [selected, set_selected] = useState([]);
 
 	return (
-		<Form form={form} name="select_team" onFinish={console.log}>
+		<Form form={form} onFinish={(team) => suggest_team(room_id, team)}>
 			<Form.Item name="players">
 				<Checkbox.Group onChange={(selected) => set_selected(selected)}>
 					{game.players.map((id) => (

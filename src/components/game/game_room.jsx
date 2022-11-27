@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import db from "../../utils/firebase";
 import { leave_room } from "../../utils/room";
 import TeamSelect from "./team_select";
+import TeamVote from "./team_vote";
 
 function next_mission(game, room_id) {
 	const game_doc = doc(db, "rooms", room_id);
@@ -51,7 +52,8 @@ export default function GameRoom(props) {
 						leave room
 					</Button>
 					<Button onClick={() => end_game(props.room_id)}>end game</Button>
-					<TeamSelect game={game} display_names={props.display_names} />
+					<TeamSelect game={game} display_names={props.display_names} room_id={props.room_id} />
+					<TeamVote game={game} display_names={props.display_names} />
 					<br /> {JSON.stringify(game.user_data[props.user_id])}
 				</>
 			) : (

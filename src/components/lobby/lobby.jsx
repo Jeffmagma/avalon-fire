@@ -9,8 +9,6 @@ import { end_game } from "../game/game_room";
 
 // set up the game based on the amount of players and starting data
 function generate_setup_data(game) {
-	// randomize the player order
-	shuffle(game.players);
 	// count number of good and bad special roles
 	let good = 0,
 		evil = 0;
@@ -35,10 +33,14 @@ function generate_setup_data(game) {
 			...Array(total_evil - evil).fill("evil"),
 			...Array(num_players - total_evil - good - 1).fill("good"),
 		];
+		// shuffle the two data arrays to randomize roles and player order
 		shuffle(game.roles);
+		shuffle(game.players);
 	}
+	// take the shuffled arrays and create an object out of them
 	const user_roles = Object.fromEntries(game.players.map((_, i) => [game.players[i], game.roles[i]]));
 	console.log(user_roles);
+	// create an object that represents what each info each player can see about the other players
 	const user_data = Object.fromEntries(
 		Object.entries(user_roles).map(([user, role]) => [
 			user,
@@ -50,15 +52,15 @@ function generate_setup_data(game) {
 			),
 		])
 	);
-	// TODO
 	console.log(user_data);
-	// return the new data
+	// return the new data that should be pushed to the game room
 	return {
 		mission: 0,
 		players: game.players,
 		user_data: user_data,
 		user_roles: user_roles,
 		status: "game",
+		game_status: "select",
 	};
 }
 
