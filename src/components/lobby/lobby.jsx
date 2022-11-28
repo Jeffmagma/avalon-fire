@@ -57,13 +57,14 @@ function generate_setup_data(game) {
 	// return the new data that should be pushed to the game room
 	return {
 		current_turn: 0,
-		current_player: 0,
-		mission: 1,
+		current_leader: 0,
+		quest: 1,
+		quest_suggestion: 1,
 		players: game.players,
 		user_data: user_data,
 		user_roles: user_roles,
 		status: "game",
-		game_status: "select",
+		game_status: "select", // lobby -> select -> vote -> select or quest -> select ... -> assassinate -> good_win/evil_win
 		votes: player_votes,
 	};
 }

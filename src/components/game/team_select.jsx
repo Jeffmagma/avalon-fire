@@ -17,13 +17,13 @@ export default function TeamSelect(props) {
 	const [form] = useForm();
 	const [selected, set_selected] = useState([]);
 
-	return (
+	return game.game_status === "select" ? (
 		<Form form={form} onFinish={(team) => suggest_team(room_id, team)}>
 			<Form.Item name="players">
 				<Checkbox.Group onChange={(selected) => set_selected(selected)}>
 					{game.players.map((id) => (
-						<Row>
-							<Checkbox key={id} value={id} disabled={!selected.includes(id) && selected.length >= 1}>
+						<Row key={id}>
+							<Checkbox value={id} disabled={!selected.includes(id) && selected.length >= 1}>
 								{display_names[id]}
 							</Checkbox>
 						</Row>
@@ -36,5 +36,7 @@ export default function TeamSelect(props) {
 				</Button>
 			</Form.Item>
 		</Form>
+	) : (
+		<>no game to vote on</>
 	);
 }

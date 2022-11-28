@@ -1,24 +1,24 @@
 import { updateDoc, doc } from "firebase/firestore";
 import { Space, Input, Button } from "antd";
+import { useRef } from "react";
 
 import db from "../../utils/firebase";
 
-function update_display_name(id, name) {
-	updateDoc(doc(db, "users", id), { display_name: name });
-}
-
 export default function DisplayNameInput(props) {
+	const { display_names, user_id } = props;
+	const display_name = useRef("");
+
+	function update_display_name() {
+		updateDoc(doc(db, "users", user_id), { display_name: display_name.current.input.value });
+	}
+
 	return (
 		<Space>
-			<Input
-				addonBefore="display name:"
-				value={props.display_name}
-				onChange={(e) => props.set_display_name(e.target.value)}
-			/>
+			<Input value={display_names[user_id]} addonBefore="display name:" ref={display_name} />
 			<Button
 				type="primary"
 				onClick={() => {
-					update_display_name(props.user_id, props.display_name);
+					update_display_name();
 				}}
 			>
 				update

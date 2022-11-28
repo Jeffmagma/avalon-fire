@@ -11,7 +11,7 @@ export default function Menu(props) {
 			<Row>
 				<Col span={24} style={{ textAlign: "center" }}>
 					<DisplayNameInput
-						display_name={props.display_name}
+						display_names={props.display_names}
 						set_display_name={props.set_display_name}
 						user_id={props.user_id}
 					/>

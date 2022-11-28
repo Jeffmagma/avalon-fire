@@ -1,4 +1,4 @@
-import { Button, Checkbox, Skeleton } from "antd";
+import { Button, Checkbox, Row, Skeleton } from "antd";
 import { onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 
@@ -23,7 +23,7 @@ export default function GameRoom(props) {
 	function next_turn() {
 		updateDoc(game_doc, {
 			current_turn: game.current_turn + 1,
-			current_player: (game.current_turn + 1) % game.players.length,
+			current_leader: (game.current_turn + 1) % game.players.length,
 		});
 	}
 
@@ -38,42 +38,39 @@ export default function GameRoom(props) {
 		return unsubscribe;
 	});
 
-	return (
+	return game ? (
 		<>
-			{game ? (
-				<>
-					this is a game
-					{game.players[game.current_player] == props.user_id ? (
-						<Button onClick={() => next_turn(game, props.room_id)}>next players turn</Button>
-					) : (
-						<></>
-					)}
-					<Button
-						onClick={() =>
-							leave_room(props.room_id, props.user_id, props.set_user_state, props.set_room_id)
-						}
-					>
-						leave room
-					</Button>
-					<Button onClick={() => end_game(props.room_id)}>end game</Button>
-					<TeamSelect game={game} display_names={props.display_names} room_id={props.room_id} />
-					<TeamVote
-						game={game}
-						display_names={props.display_names}
-						room_id={props.room_id}
-						user_id={props.user_id}
-					/>
-					<br /> {JSON.stringify(game.user_data[props.user_id])}
-					<br />{" "}
-					{Object.entries(game).map(([key, value]) => (
-						<>
-							{key} {JSON.stringify(value)} <br />
-						</>
-					))}
-				</>
-			) : (
-				<Skeleton />
-			)}
+			<Row>
+				{game.players[game.current_leader] == props.user_id ? (
+					<Button onClick={() => next_turn()}>next players turn</Button>
+				) : (
+					<></>
+				)}
+				<Button
+					onClick={() => leave_room(props.room_id, props.user_id, props.set_user_state, props.set_room_id)}
+				>
+					leave room
+				</Button>
+				<Button onClick={() => end_game(props.room_id)}>end game</Button>
+			</Row>
+			<Row>
+				<TeamSelect game={game} display_names={props.display_names} room_id={props.room_id} />
+			</Row>
+			<Row>
+				<TeamVote
+					game={game}
+					display_names={props.display_names}
+					room_id={props.room_id}
+					user_id={props.user_id}
+				/>
+			</Row>
+			{Object.entries(game).map(([key, value]) => (
+				<div key={key}>
+					{key} {JSON.stringify(value)} <br />
+				</div>
+			))}
 		</>
+	) : (
+		<Skeleton />
 	);
 }
