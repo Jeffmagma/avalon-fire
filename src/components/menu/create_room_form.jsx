@@ -8,7 +8,6 @@ import { join_room } from "../../utils/room";
 
 // create a game
 function create_game(creator, form_data, set_user_state, set_room_id) {
-	console.log(form_data);
 	console.log("creating new game with roles:" + form_data.roles);
 	addDoc(collection(db, "rooms"), {
 		creator: creator, // who created the game
@@ -38,8 +37,8 @@ export default function CreateRoomForm(props) {
 						{Object.keys(roles)
 							.filter((key) => roles[key].optional)
 							.map((key) => (
-								<Row>
-									<Checkbox key={key} value={key}>
+								<Row key={key}>
+									<Checkbox value={key}>
 										{key} <RoleInfo info={roles[key]} />
 									</Checkbox>
 								</Row>

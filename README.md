@@ -11,3 +11,4 @@ realtime avalon with rooms, using firebase and react ()
 -   [ ] restructure file system
 -   [ ] possible google/facebook login when public
 -   [ ] simpler room IDs
+-   [ ] refactor to automatically deconstruct props, look into moving some state around

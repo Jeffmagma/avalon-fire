@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { lazy, useState } from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+const Avalon = lazy(() => import("./App"));
 
 import { ConfigProvider, Row, Switch } from "antd";
 
@@ -26,7 +26,7 @@ function ThemedApp() {
 					}}
 				/>
 			</Row>
-			<App />
+			<Avalon />
 		</ConfigProvider>
 	);
 }

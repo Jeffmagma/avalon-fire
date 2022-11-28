@@ -4,6 +4,7 @@ import React, { useState, useEffect, lazy } from "react";
 
 import db, { auth } from "./utils/firebase";
 import { join_room } from "./utils/room";
+import { Skeleton } from "antd";
 
 const Lobby = lazy(() => import("./components/lobby/lobby"));
 const Menu = lazy(() => import("./components/menu/menu"));
@@ -52,13 +53,9 @@ function Avalon() {
 			}
 		});
 		// attempt an "anonymous" sign in
-		signInAnonymously(auth)
-			.then(() => {
-				console.log("successfully signed in");
-			})
-			.catch((error) => {
-				console.err("error signing in:" + error.code + error.message);
-			});
+		signInAnonymously(auth).then(() => {
+			console.log("successfully signed in");
+		});
 	}, []);
 
 	useEffect(() => {
@@ -79,9 +76,9 @@ function Avalon() {
 				<GameRoom
 					room_id={room_id}
 					user_id={user_id}
-					set_user_state={set_user_state}
-					set_room_id={set_room_id}
 					display_names={display_names}
+					set_room_id={set_room_id}
+					set_user_state={set_user_state}
 				/>
 			);
 		case "lobby":
@@ -90,20 +87,23 @@ function Avalon() {
 					room_id={room_id}
 					user_id={user_id}
 					display_names={display_names}
-					set_user_state={set_user_state}
 					set_room_id={set_room_id}
+					set_user_state={set_user_state}
 				/>
 			);
 		case "menu":
-		default:
 			return (
 				<Menu
+					user_id={user_id}
 					display_names={display_names}
 					set_room_id={set_room_id}
-					user_id={user_id}
 					set_user_state={set_user_state}
 				/>
 			);
+		default:
+			<>
+				invalid state! <Skeleton />
+			</>;
 	}
 }
 

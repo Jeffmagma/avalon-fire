@@ -65,6 +65,7 @@ function generate_setup_data(game) {
 		user_roles: user_roles,
 		status: "game",
 		game_status: "select", // lobby -> select -> vote -> select or quest -> select ... -> assassinate -> good_win/evil_win
+		quest_votes: [],
 		votes: player_votes,
 	};
 }

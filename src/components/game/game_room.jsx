@@ -4,8 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import db from "../../utils/firebase";
 import { leave_room } from "../../utils/room";
-import TeamSelect from "./team_select";
-import TeamVote from "./team_vote";
+import GameContent from "./content/game_content";
 
 // end the game and disband the room
 export function end_game(room_id) {
@@ -54,15 +53,7 @@ export default function GameRoom(props) {
 				<Button onClick={() => end_game(props.room_id)}>end game</Button>
 			</Row>
 			<Row>
-				<TeamSelect game={game} display_names={props.display_names} room_id={props.room_id} />
-			</Row>
-			<Row>
-				<TeamVote
-					game={game}
-					display_names={props.display_names}
-					room_id={props.room_id}
-					user_id={props.user_id}
-				/>
+				<GameContent game={game} />
 			</Row>
 			{Object.entries(game).map(([key, value]) => (
 				<div key={key}>
