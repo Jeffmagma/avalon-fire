@@ -14,7 +14,7 @@ export default function DisplayNameInput(props) {
 
 	return (
 		<Space>
-			<Input value={display_names[user_id]} addonBefore="display name:" ref={display_name} />
+			<Input defaultValue={display_names[user_id]} addonBefore="display name:" ref={display_name} />
 			<Button
 				type="primary"
 				onClick={() => {

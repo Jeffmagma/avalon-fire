@@ -37,6 +37,6 @@ export default function TeamSelect(props) {
 			</Form.Item>
 		</Form>
 	) : (
-		<>no game to vote on</>
+		<>waiting for {display_names[game.players[game.current_leader]]} to select a team</>
 	);
 }

@@ -67,6 +67,7 @@ function generate_setup_data(game) {
 		game_status: "select", // lobby -> select -> vote -> select or quest -> select ... -> assassinate -> good_win/evil_win
 		quest_votes: [],
 		votes: player_votes,
+		timeline: [], // select -> leader, team, result | mission -> team, result | assassination -> target, result
 	};
 }
 

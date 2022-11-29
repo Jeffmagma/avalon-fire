@@ -14,7 +14,7 @@ export function end_game(room_id) {
 }
 
 export default function GameRoom(props) {
-	const { room_id } = props;
+	const { room_id, display_names, user_id } = props;
 	const game_doc = useMemo(() => doc(db, "rooms", room_id));
 	const [game, set_game] = useState(undefined);
 
@@ -53,7 +53,7 @@ export default function GameRoom(props) {
 				<Button onClick={() => end_game(props.room_id)}>end game</Button>
 			</Row>
 			<Row>
-				<GameContent game={game} />
+				<GameContent game={game} display_names={display_names} room_id={room_id} user_id={user_id} />
 			</Row>
 			{Object.entries(game).map(([key, value]) => (
 				<div key={key}>
