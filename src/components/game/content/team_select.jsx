@@ -19,7 +19,17 @@ export default function TeamSelect(props) {
 
 	return game.players[game.current_leader] == user_id ? (
 		<Form form={form} onFinish={suggest_team}>
-			<Form.Item name="players">
+			<Form.Item
+				name="players"
+				rules={[
+					{
+						validator: (_, value) =>
+							value.length === 1
+								? Promise.resolve()
+								: Promise.reject(new Error("You must select the right amount of players! (1)")),
+					},
+				]}
+			>
 				<Checkbox.Group onChange={set_selected}>
 					{game.players.map((id) => (
 						<Row key={id}>

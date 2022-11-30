@@ -3,73 +3,8 @@ import { onSnapshot, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import db from "../../utils/firebase";
-import { leave_room, shuffle } from "../../utils/room";
-import { roles } from "../../utils/avalon";
+import { leave_room, generate_setup_data } from "../../utils/room";
 import { end_game } from "../game/game_room";
-
-// set up the game based on the amount of players and starting data
-function generate_setup_data(game) {
-	// count number of good and bad special roles
-	let good = 0,
-		evil = 0;
-	game.roles.forEach((role) => {
-		if (roles[role].side === "good") {
-			good++;
-		} else {
-			evil++;
-		}
-	});
-	const num_players = game.players.length;
-	// for testing only!
-	if (num_players <= 2) {
-		game.roles = ["good", "evil"];
-	} else {
-		const total_evil = Math.ceil(num_players / 3);
-		// fill remaining slots with merlin and generic roles
-		game.roles = [
-			...game.roles,
-			"merlin",
-			...Array(total_evil - evil).fill("evil"),
-			...Array(num_players - total_evil - good - 1).fill("good"),
-		];
-		// shuffle the two data arrays to randomize roles and player order
-		shuffle(game.roles);
-		shuffle(game.players);
-	}
-	// take the shuffled arrays and create an object out of them
-	const user_roles = Object.fromEntries(game.players.map((_, i) => [game.players[i], game.roles[i]]));
-	console.log(user_roles);
-	// create an object that represents what each info each player can see about the other players
-	const user_data = Object.fromEntries(
-		Object.entries(user_roles).map(([user, role]) => [
-			user,
-			Object.fromEntries(
-				Object.entries(user_roles).map(([role_user, user_role]) => [
-					role_user,
-					roles[role].view_role(user_role),
-				])
-			),
-		])
-	);
-	console.log(user_data);
-	// create an object to keep track of each players votes
-	const player_votes = Object.fromEntries(game.players.map((_, i) => [game.players[i], []]));
-	// return the new data that should be pushed to the game room
-	return {
-		current_turn: 0,
-		current_leader: 0,
-		quest: 1,
-		quest_suggestion: 1,
-		players: game.players,
-		user_data: user_data,
-		user_roles: user_roles,
-		status: "game",
-		game_status: "select", // lobby -> select -> vote -> select or quest -> select ... -> assassinate -> good_win/evil_win
-		quest_votes: [],
-		votes: player_votes,
-		timeline: [], // select -> leader, team, result | mission -> team, result | assassination -> target, result
-	};
-}
 
 function start_game(room_id) {
 	const room_doc = doc(db, "rooms", room_id);
@@ -125,7 +60,7 @@ export default function Lobby(props) {
 						</Button>
 					) : (
 						<Button
-							onClick={() => end_game(props.room_id)}
+							onClick={() => end_game(props.room_id, props.set_user_state)}
 							style={{ background: "red", borderColor: "red" }}
 						>
 							disband lobby room

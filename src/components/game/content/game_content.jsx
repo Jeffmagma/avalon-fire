@@ -13,7 +13,7 @@ export default function GameContent(props) {
 		case "vote":
 			return <TeamVote game={game} display_names={display_names} room_id={room_id} user_id={user_id} />;
 		case "quest":
-			return <QuestVote game={game} display_names={display_names} room_id={room_id} />;
+			return <QuestVote game={game} display_names={display_names} room_id={room_id} user_id={user_id} />;
 		default:
 			return <>invalid game state!</>;
 	}

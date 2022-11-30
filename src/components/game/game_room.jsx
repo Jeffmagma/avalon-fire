@@ -7,14 +7,17 @@ import { leave_room } from "../../utils/room";
 import GameContent from "./content/game_content";
 
 // end the game and disband the room
-export function end_game(room_id) {
+export function end_game(room_id, set_user_state) {
 	const game_doc = doc(db, "rooms", room_id);
 	// set everyone back to the menu, and then delete the game
-	updateDoc(game_doc, { status: "menu" }).then(() => deleteDoc(game_doc));
+	updateDoc(game_doc, { status: "menu" }).then(() => {
+		set_user_state("menu");
+		deleteDoc(game_doc);
+	});
 }
 
 export default function GameRoom(props) {
-	const { room_id, display_names, user_id } = props;
+	const { room_id, display_names, user_id, set_user_state } = props;
 	const game_doc = useMemo(() => doc(db, "rooms", room_id));
 	const [game, set_game] = useState(undefined);
 
@@ -27,9 +30,9 @@ export default function GameRoom(props) {
 	}
 
 	useEffect(() => {
-		const unsubscribe = onSnapshot(game_doc, (doc) => {
-			set_game(doc.data());
-			if (doc.data().status === "menu") {
+		const unsubscribe = onSnapshot(game_doc, (snapshot) => {
+			set_game(snapshot.data());
+			if (snapshot.data().status === "menu") {
 				props.set_room_id("");
 				props.set_user_state("menu");
 			}
@@ -50,7 +53,7 @@ export default function GameRoom(props) {
 				>
 					leave room
 				</Button>
-				<Button onClick={() => end_game(props.room_id)}>end game</Button>
+				<Button onClick={() => end_game(props.room_id, set_user_state)}>end game</Button>
 			</Row>
 			<Row>
 				<GameContent game={game} display_names={display_names} room_id={room_id} user_id={user_id} />
