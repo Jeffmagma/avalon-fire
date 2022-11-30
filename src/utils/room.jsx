@@ -58,9 +58,10 @@ export function generate_setup_data(game) {
 		])
 	);
 	console.log(user_data);
+
 	// create an object to keep track of each players votes
 	const player_votes = Object.fromEntries(
-		game.players.map((_, i) => [game.players[i], { 1: [], 2: [], 3: [], 4: [], 5: [] }]) // possible to replace with some kind of sexy generation?
+		game.players.map((_, i) => [game.players[i], Object.fromEntries([...Array(5).keys()].map((i) => [1 + i, []]))])
 	);
 	console.log(player_votes);
 	// return the new data that should be pushed to the game room
