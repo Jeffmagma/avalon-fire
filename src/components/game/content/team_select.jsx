@@ -4,6 +4,7 @@ import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 
 import db from "../../../utils/firebase";
+import { players_per_mission } from "../../../utils/avalon";
 
 export default function TeamSelect(props) {
 	const { game, display_names, room_id, user_id } = props;
@@ -23,12 +24,19 @@ export default function TeamSelect(props) {
 				name="players"
 				rules={[
 					{
-						validator: (_, value) =>
-							value.length === 1
+						validator: (_rule, value) =>
+							value.length === players_per_mission[game.players.length][game.quest]
 								? Promise.resolve()
-								: Promise.reject(new Error("You must select the right amount of players! (1)")),
+								: Promise.reject(
+										new Error(
+											"You must select the right amount of players! (" +
+												players_per_mission[game.players.length][game.quest] +
+												")"
+										)
+								  ),
 					},
 				]}
+				initialValue={[]}
 			>
 				<Checkbox.Group onChange={set_selected}>
 					{game.players.map((id) => (

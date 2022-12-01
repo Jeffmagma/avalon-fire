@@ -25,6 +25,7 @@ function ThemedApp() {
 						}
 					}}
 				/>
+				&lt;- this is gonna be a dark mode switch eventually, for now it just turns the blue accent red
 			</Row>
 			<Avalon />
 		</ConfigProvider>

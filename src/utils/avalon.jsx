@@ -72,3 +72,15 @@ export const roles = {
 		info: ["oberon does not know who else is evil, and the other evil players do not know that he is evil"],
 	},
 };
+
+export const players_per_mission = {
+	2: [1, 1, 1, 2, 1], // testing only!
+	5: [2, 3, 2, 3, 3],
+	6: [2, 3, 4, 3, 4],
+	7: [2, 3, 3, 4, 4],
+	8: [3, 4, 4, 5, 5],
+	9: [3, 4, 4, 5, 5],
+	10: [3, 4, 4, 5, 5],
+
+	two_fail: (x) => x === 2 || x >= 7,
+};

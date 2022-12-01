@@ -1,8 +1,12 @@
-import { lazy } from "react";
+import TeamSelect from "./team_select";
+import TeamVote from "./team_vote";
+import QuestVote from "./quest_vote";
 
+// do this when the thing sizes get big
+/*import { lazy } from "react";
 const TeamSelect = lazy(() => import("./team_select"));
 const TeamVote = lazy(() => import("./team_vote"));
-const QuestVote = lazy(() => import("./quest_vote"));
+const QuestVote = lazy(() => import("./quest_vote"));*/
 
 export default function GameContent(props) {
 	const { game, display_names, room_id, user_id } = props;

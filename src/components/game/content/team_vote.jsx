@@ -1,5 +1,5 @@
 import { Button, List } from "antd";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import db from "../../../utils/firebase";
 
 export default function TeamVote(props) {
@@ -7,9 +7,9 @@ export default function TeamVote(props) {
 
 	function team_vote(result) {
 		const game_doc = doc(db, "rooms", room_id);
+		game.team_votes.push(result);
 		// if this is the last vote that needs to be counted, check if the next leader suggests a team or the quest starts
 		if (game.team_votes.length === game.players.length - 1) {
-			game.team_votes.push(result);
 			// more than half the players voted to accept the team
 			if (game.team_votes.filter((x) => x).length > game.players.length / 2) {
 				// start the quest
@@ -34,7 +34,7 @@ export default function TeamVote(props) {
 				}
 			}
 		} else {
-			updateDoc(game_doc, { team_votes: arrayUnion(result) });
+			updateDoc(game_doc, { team_votes: game.team_votes });
 		}
 		updateDoc(game_doc, {
 			// cannot use array union here cause it only adds unique values
