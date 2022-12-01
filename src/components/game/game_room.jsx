@@ -17,24 +17,16 @@ export function end_game(room_id, set_user_state) {
 }
 
 export default function GameRoom(props) {
-	const { room_id, display_names, user_id, set_user_state } = props;
+	const { room_id, display_names, user_id, set_user_state, set_room_id } = props;
 	const game_doc = useMemo(() => doc(db, "rooms", room_id));
 	const [game, set_game] = useState(undefined);
-
-	// go to the next turn
-	function next_turn() {
-		updateDoc(game_doc, {
-			current_turn: game.current_turn + 1,
-			current_leader: (game.current_turn + 1) % game.players.length,
-		});
-	}
 
 	useEffect(() => {
 		const unsubscribe = onSnapshot(game_doc, (snapshot) => {
 			set_game(snapshot.data());
 			if (snapshot.data().status === "menu") {
-				props.set_room_id("");
-				props.set_user_state("menu");
+				set_room_id("");
+				set_user_state("menu");
 			}
 		});
 		return unsubscribe;
@@ -43,17 +35,8 @@ export default function GameRoom(props) {
 	return game ? (
 		<>
 			<Row>
-				{game.players[game.current_leader] == props.user_id ? (
-					<Button onClick={() => next_turn()}>next players turn</Button>
-				) : (
-					<></>
-				)}
-				<Button
-					onClick={() => leave_room(props.room_id, props.user_id, props.set_user_state, props.set_room_id)}
-				>
-					leave room
-				</Button>
-				<Button onClick={() => end_game(props.room_id, set_user_state)}>end game</Button>
+				<Button onClick={() => leave_room(room_id, user_id, set_user_state, set_room_id)}>leave room</Button>
+				<Button onClick={() => end_game(room_id, set_user_state)}>end game</Button>
 			</Row>
 			<Row>
 				<GameContent game={game} display_names={display_names} room_id={room_id} user_id={user_id} />

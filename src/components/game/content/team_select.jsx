@@ -18,22 +18,25 @@ export default function TeamSelect(props) {
 		updateDoc(game_doc, { game_status: "vote", current_team: form_data.players });
 	}
 
+	function validate_selection(_rule, value) {
+		if (value.length === players_per_mission[game.players.length][game.quest - 1]) {
+			return Promise.resolve();
+		} else {
+			return Promise.reject(
+				new Error(
+					"You need " + players_per_mission[game.players.length][game.quest] + " players for this mission!"
+				)
+			);
+		}
+	}
+
 	return game.players[game.current_leader] == user_id ? (
 		<Form form={form} onFinish={suggest_team}>
 			<Form.Item
 				name="players"
 				rules={[
 					{
-						validator: (_rule, value) =>
-							value.length === players_per_mission[game.players.length][game.quest]
-								? Promise.resolve()
-								: Promise.reject(
-										new Error(
-											"You must select the right amount of players! (" +
-												players_per_mission[game.players.length][game.quest] +
-												")"
-										)
-								  ),
+						validator: validate_selection,
 					},
 				]}
 				initialValue={[]}

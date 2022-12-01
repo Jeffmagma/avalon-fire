@@ -6,31 +6,32 @@ import db from "../../utils/firebase";
 import { leave_room, generate_setup_data } from "../../utils/room";
 import { end_game } from "../game/game_room";
 
-function start_game(room_id) {
-	const room_doc = doc(db, "rooms", room_id);
-	getDoc(room_doc).then((data) => {
-		const setup_data = generate_setup_data(data.data());
-		updateDoc(room_doc, setup_data);
-	});
-}
-
 export default function Lobby(props) {
+	const { room_id, set_user_state } = props;
 	const [user_ids, set_user_ids] = useState([]);
 	const [creator_id, set_creator_id] = useState("");
 
 	useEffect(() => {
-		const game_doc = doc(db, "rooms", props.room_id);
+		const game_doc = doc(db, "rooms", room_id);
 		getDoc(game_doc).then((doc) => set_creator_id(doc.data().creator));
 		const unsubscribe = onSnapshot(game_doc, (snapshot) => {
 			if (["menu", "game"].includes(snapshot.data().status)) {
-				props.set_user_state(snapshot.data().status);
+				set_user_state(snapshot.data().status);
 			} else {
 				set_user_ids(snapshot.data().players);
 			}
 		});
 
 		return unsubscribe;
-	}, [props]);
+	}, []);
+
+	function start_game() {
+		const room_doc = doc(db, "rooms", room_id);
+		getDoc(room_doc).then((data) => {
+			const setup_data = generate_setup_data(data.data());
+			updateDoc(room_doc, setup_data);
+		});
+	}
 
 	return (
 		<>

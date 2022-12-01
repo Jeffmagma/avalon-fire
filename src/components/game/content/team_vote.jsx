@@ -9,7 +9,7 @@ export default function TeamVote(props) {
 		const game_doc = doc(db, "rooms", room_id);
 		game.team_votes.push(result);
 		// if this is the last vote that needs to be counted, check if the next leader suggests a team or the quest starts
-		if (game.team_votes.length === game.players.length - 1) {
+		if (game.team_votes.length === game.players.length) {
 			// more than half the players voted to accept the team
 			if (game.team_votes.filter((x) => x).length > game.players.length / 2) {
 				// start the quest
@@ -25,7 +25,7 @@ export default function TeamVote(props) {
 					// if not, go to the next leader
 					updateDoc(game_doc, {
 						current_turn: game.current_turn + 1,
-						current_leader: (game.current_leader + 1) % game.players.length,
+						current_leader: (game.current_turn + 1) % game.players.length,
 						current_team: [],
 						team_votes: [],
 						team_suggestion: game.team_suggestion + 1,
