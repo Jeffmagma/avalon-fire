@@ -2,7 +2,7 @@ import React, { lazy, useState } from "react";
 import ReactDOM from "react-dom/client";
 const Avalon = lazy(() => import("./App"));
 
-import { ConfigProvider, Row, Switch } from "antd";
+import { ConfigProvider, Row, Switch, Col } from "antd";
 
 function ThemedApp() {
 	const [theme, set_theme] = useState({
@@ -26,6 +26,11 @@ function ThemedApp() {
 					}}
 				/>
 				&lt;- this is gonna be a dark mode switch eventually, for now it just turns the blue accent red
+			</Row>
+			<Row>
+				<Col span={24} style={{ textAlign: "center" }}>
+					<h1>avalon test</h1>
+				</Col>
 			</Row>
 			<Avalon />
 		</ConfigProvider>

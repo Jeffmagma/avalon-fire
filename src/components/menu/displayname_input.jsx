@@ -5,7 +5,7 @@ import { useRef } from "react";
 import db from "../../utils/firebase";
 
 export default function DisplayNameInput(props) {
-	const { display_names, user_id } = props;
+	const { user_id } = props;
 	const display_name = useRef("");
 
 	function update_display_name() {
@@ -14,7 +14,7 @@ export default function DisplayNameInput(props) {
 
 	return (
 		<Space>
-			<Input defaultValue={display_names[user_id]} addonBefore="display name:" ref={display_name} />
+			<Input defaultValue="change this!" addonBefore="display name:" ref={display_name} />
 			<Button
 				type="primary"
 				onClick={() => {

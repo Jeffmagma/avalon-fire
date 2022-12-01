@@ -24,7 +24,9 @@ export default function TeamSelect(props) {
 		} else {
 			return Promise.reject(
 				new Error(
-					"You need " + players_per_mission[game.players.length][game.quest] + " players for this mission!"
+					"You need " +
+						players_per_mission[game.players.length][game.quest - 1] +
+						" players for this mission!"
 				)
 			);
 		}
@@ -44,7 +46,13 @@ export default function TeamSelect(props) {
 				<Checkbox.Group onChange={set_selected}>
 					{game.players.map((id) => (
 						<Row key={id}>
-							<Checkbox value={id} disabled={!selected.includes(id) && selected.length >= 1}>
+							<Checkbox
+								value={id}
+								disabled={
+									!selected.includes(id) &&
+									selected.length >= players_per_mission[game.players.length][game.quest - 1]
+								}
+							>
 								{display_names[id]}
 							</Checkbox>
 						</Row>

@@ -7,7 +7,6 @@ import RoomList from "./room_list";
 export default function Menu(props) {
 	return (
 		<Space direction="vertical" size="large" style={{ width: "100%" }}>
-			<Row />
 			<Row>
 				<Col span={24} style={{ textAlign: "center" }}>
 					<DisplayNameInput
@@ -17,11 +16,7 @@ export default function Menu(props) {
 					/>
 				</Col>
 			</Row>
-			<Row>
-				<Col span={24} style={{ textAlign: "center" }}>
-					<h1>avalon test</h1>
-				</Col>
-			</Row>
+
 			<Row>
 				<Col
 					xs={{ span: 7, offset: 3 }}

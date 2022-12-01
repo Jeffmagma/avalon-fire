@@ -1,6 +1,7 @@
 import TeamSelect from "./team_select";
 import TeamVote from "./team_vote";
 import QuestVote from "./quest_vote";
+import Assassinate from "./assassinate";
 
 // do this when the thing sizes get big
 /*import { lazy } from "react";
@@ -18,6 +19,12 @@ export default function GameContent(props) {
 			return <TeamVote game={game} display_names={display_names} room_id={room_id} user_id={user_id} />;
 		case "quest":
 			return <QuestVote game={game} display_names={display_names} room_id={room_id} user_id={user_id} />;
+		case "assassinate":
+			return <Assassinate game={game} display_names={display_names} room_id={room_id} user_id={user_id} />;
+		case "evil_win":
+			return <>evil wins!</>;
+		case "good_win":
+			return <>good wins!</>;
 		default:
 			return <>invalid game state!</>;
 	}

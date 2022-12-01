@@ -28,13 +28,14 @@ export function generate_setup_data(game) {
 	const num_players = game.players.length;
 	// for testing only!
 	if (num_players <= 2) {
-		game.roles = ["good", "evil"];
+		game.roles = ["merlin", "assassin"];
 	} else {
 		const total_evil = Math.ceil(num_players / 3);
 		// fill remaining slots with merlin and generic roles
 		game.roles = [
 			...game.roles,
 			"merlin",
+			"assassin",
 			...Array(total_evil - evil).fill("evil"),
 			...Array(num_players - total_evil - good - 1).fill("good"),
 		];
