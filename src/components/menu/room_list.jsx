@@ -37,7 +37,7 @@ export default function RoomList(props) {
 	const [rooms, setRooms] = useState([]);
 	useEffect(() => {
 		const games_by_created_desc = query(collection(db, "rooms"), orderBy("created", "desc"));
-		onSnapshot(games_by_created_desc, (snapshot) => {
+		const unsubscribe = onSnapshot(games_by_created_desc, (snapshot) => {
 			setRooms(
 				snapshot.docs.map((doc) => ({
 					id: doc.id,
@@ -45,6 +45,7 @@ export default function RoomList(props) {
 				}))
 			);
 		});
+		return unsubscribe;
 	}, []);
 
 	return (
