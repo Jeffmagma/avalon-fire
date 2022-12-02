@@ -1,10 +1,12 @@
-import { Button, Checkbox, Row, Skeleton } from "antd";
+import { Button, Col, Row, Skeleton } from "antd";
 import { onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 
 import db from "../../utils/firebase";
 import { leave_room } from "../../utils/room";
 import GameContent from "./content/game_content";
+import PlayerList from "./player_list";
+import PlayerVotes from "./player_votes";
 
 // end the game and disband the room
 export function end_game(room_id, set_user_state) {
@@ -30,7 +32,7 @@ export default function GameRoom(props) {
 			}
 		});
 		return unsubscribe;
-	});
+	}, []);
 
 	return game ? (
 		<>
@@ -39,7 +41,15 @@ export default function GameRoom(props) {
 				<Button onClick={() => end_game(room_id, set_user_state)}>end game</Button>
 			</Row>
 			<Row>
-				<GameContent game={game} display_names={display_names} room_id={room_id} user_id={user_id} />
+				<Col span={6}>
+					<GameContent game={game} display_names={display_names} room_id={room_id} user_id={user_id} />
+				</Col>
+				<Col span={6}>
+					<PlayerList game={game} display_names={display_names} user_id={user_id} />
+				</Col>
+				<Col span={6}>
+					<PlayerVotes game={game} display_names={display_names} />
+				</Col>
 			</Row>
 			{Object.entries(game).map(([key, value]) => (
 				<div key={key}>

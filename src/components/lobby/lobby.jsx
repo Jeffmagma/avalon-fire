@@ -38,7 +38,7 @@ export default function Lobby(props) {
 			<Row gutter={[2, 16]}>
 				<Col offset={8} span={8}>
 					<Divider>
-						Lobby: {props.room_id} creator: {props.display_names[creator_id]}
+						Lobby: {room_id} creator: {props.display_names[creator_id]}
 					</Divider>
 				</Col>
 				<Col offset={8} span={8}>
@@ -72,7 +72,7 @@ export default function Lobby(props) {
 					<Button
 						onClick={() => start_game(props.room_id)}
 						type="primary"
-						disabled={props.user_id !== creator_id}
+						disabled={props.user_id !== creator_id && !(user_ids.length === 2 || user_ids.length >= 5)}
 					>
 						start game
 					</Button>
