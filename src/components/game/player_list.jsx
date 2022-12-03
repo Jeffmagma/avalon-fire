@@ -1,10 +1,11 @@
-import { Row, Col, List } from "antd";
+import { Row, Col, List, Divider } from "antd";
 
 export default function PlayerList(props) {
 	const { game, display_names, user_id } = props;
 
 	return (
 		<>
+			<Divider>players</Divider>
 			<List
 				bordered
 				dataSource={game.players}

@@ -1,4 +1,4 @@
-import { Checkbox, Form, Row, Button } from "antd";
+import { Checkbox, Form, Row, Button, Col } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
@@ -44,19 +44,21 @@ export default function TeamSelect(props) {
 				initialValue={[]}
 			>
 				<Checkbox.Group onChange={set_selected}>
-					{game.players.map((id) => (
-						<Row key={id}>
-							<Checkbox
-								value={id}
-								disabled={
-									!selected.includes(id) &&
-									selected.length >= players_per_mission[game.players.length][game.quest - 1]
-								}
-							>
-								{display_names[id]}
-							</Checkbox>
-						</Row>
-					))}
+					<Row>
+						{game.players.map((id) => (
+							<Col key={id} span={24}>
+								<Checkbox
+									value={id}
+									disabled={
+										!selected.includes(id) &&
+										selected.length >= players_per_mission[game.players.length][game.quest - 1]
+									}
+								>
+									{display_names[id]}
+								</Checkbox>
+							</Col>
+						))}
+					</Row>
 				</Checkbox.Group>
 			</Form.Item>
 			<Form.Item key="submit">
