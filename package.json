@@ -1,14 +1,12 @@
 {
 	"name": "avalon-fire",
-	"version": "0.1.0",
+	"version": "0.1.6",
 	"private": true,
 	"dependencies": {
 		"antd": "^5.0.3",
 		"firebase": "^9.13.0",
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"react-scripts": "5.0.1",
-		"web-vitals": "^2.1.4"
+		"react-dom": "^18.2.0"
 	},
 	"devDependencies": {
 		"@vitejs/plugin-react": "2.2.0",

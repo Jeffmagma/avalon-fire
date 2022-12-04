@@ -51,22 +51,22 @@ export default function GameRoom(props) {
 				<Button onClick={() => end_game(room_id, set_user_state)}>end game</Button>
 			</Row>
 			<Row>
-				<Col span={6}>
+				<Col span={12}>
 					<GameContent game={game} display_names={display_names} room_id={room_id} user_id={user_id} />
 				</Col>
 				<Col span={6}>
 					<PlayerList game={game} display_names={display_names} user_id={user_id} />
 				</Col>
 				<Col span={6}>
-					<PlayerVotes game={game} display_names={display_names} />
-				</Col>
-				<Col span={6}>
 					hi {display_names[user_id]} you are {game.user_roles[user_id]}
 				</Col>
 			</Row>
 			<Row>
-				<MissionTimeline game={game} />
+				<PlayerVotes game={game} display_names={display_names} />
 			</Row>
+			{/*<Row>
+				<MissionTimeline game={game} />
+	</Row>*/}
 			<Row>
 				<Collapse>
 					<Panel header="game data (debug)">
