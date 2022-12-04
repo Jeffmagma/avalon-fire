@@ -2,14 +2,14 @@ import React, { lazy, useState } from "react";
 import ReactDOM from "react-dom/client";
 const Avalon = lazy(() => import("./App"));
 
-import { ConfigProvider, Row, Switch, Col } from "antd";
+import { ConfigProvider, Row, Switch, Col, theme } from "antd";
 
 function ThemedApp() {
-	const [theme, set_theme] = useState({
+	const [custom_theme, set_theme] = useState({
 		colorPrimary: "#1890ff",
 	});
 	return (
-		<ConfigProvider theme={{ token: theme }}>
+		<ConfigProvider theme={{ token: custom_theme, components: { Steps: { colorPrimary: "green" } } }}>
 			<Row>
 				<Switch
 					defaultChecked

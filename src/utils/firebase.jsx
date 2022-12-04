@@ -2,6 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
+export const dev_mode = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
+
 const firebaseConfig = {
 	apiKey: "AIzaSyC5GPT8W32RQXcpy_dLXM7K1cpCvPISEY4",
 	authDomain: "cyan-pink.firebaseapp.com",
@@ -14,7 +16,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+
+if (dev_mode) {
 	console.log("dev");
 	connectFirestoreEmulator(db, "localhost", 8080);
 } else {
@@ -22,5 +25,4 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
 }
 
 export default db;
-
 export const auth = getAuth();

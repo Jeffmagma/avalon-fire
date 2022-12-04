@@ -17,7 +17,7 @@ export default function PlayerVotes(props) {
 								<Row key={key + x}>
 									<Col span={14}>{display_names[key]}</Col>
 									{game.votes[key][quest].map((vote) => (
-										<Col span={2}>
+										<Col span={2} key={key + x + Math.random()}>
 											{vote ? (
 												<Tag color="green">
 													<CheckOutlined />

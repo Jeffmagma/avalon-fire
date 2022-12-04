@@ -20,7 +20,7 @@ export default function QuestVote(props) {
 				(game.quest === 4 && players_per_mission.two_fail(game.players.length) ? 2 : 1);
 			game.quest_results.push(quest_result);
 			if (game.quest_results.filter((x) => x).length === 3) {
-				updateDoc(game_doc, { game_status: "assassinate" });
+				updateDoc(game_doc, { quest_results: game.quest_results, game_status: "assassinate" });
 			} else if (game.quest_results.filter((x) => !x).length === 3) {
 				updateDoc(game_doc, { game_status: "evil_win" });
 			} else {

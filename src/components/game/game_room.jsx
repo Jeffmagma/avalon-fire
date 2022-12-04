@@ -1,4 +1,4 @@
-import { Button, Col, Collapse, Row, Skeleton } from "antd";
+import { Button, Col, Collapse, Row, Skeleton, Steps } from "antd";
 import { onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 const { Panel } = Collapse;
@@ -6,6 +6,7 @@ const { Panel } = Collapse;
 import db from "../../utils/firebase";
 import { leave_room } from "../../utils/room";
 import GameContent from "./content/game_content";
+import MissionTimeline from "./mission_timeline";
 import PlayerList from "./player_list";
 import PlayerVotes from "./player_votes";
 
@@ -23,6 +24,14 @@ export default function GameRoom(props) {
 	const { room_id, display_names, user_id, set_user_state, set_room_id } = props;
 	const game_doc = useMemo(() => doc(db, "rooms", room_id));
 	const [game, set_game] = useState(undefined);
+
+	const items = [
+		{ title: "first step" },
+		{ title: "second step", status: "error" },
+		{ title: "third step" },
+		{ title: "first step" },
+		{ title: "first step", status: "error" },
+	];
 
 	useEffect(() => {
 		const unsubscribe = onSnapshot(game_doc, (snapshot) => {
@@ -55,15 +64,20 @@ export default function GameRoom(props) {
 					hi {display_names[user_id]} you are {game.user_roles[user_id]}
 				</Col>
 			</Row>
-			<Collapse>
-				<Panel header="game data (debug)">
-					{Object.entries(game).map(([key, value]) => (
-						<div key={key}>
-							{key} {JSON.stringify(value)} <br />
-						</div>
-					))}
-				</Panel>
-			</Collapse>
+			<Row>
+				<MissionTimeline game={game} />
+			</Row>
+			<Row>
+				<Collapse>
+					<Panel header="game data (debug)">
+						{Object.entries(game).map(([key, value]) => (
+							<div key={key}>
+								{key} {JSON.stringify(value)} <br />
+							</div>
+						))}
+					</Panel>
+				</Collapse>
+			</Row>
 		</>
 	) : (
 		<Skeleton />
