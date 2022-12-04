@@ -1,4 +1,4 @@
-import { Checkbox, Form, Row, Button, Col } from "antd";
+import { Checkbox, Form, Row, Button, Col, Divider } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
@@ -33,40 +33,43 @@ export default function TeamSelect(props) {
 	}
 
 	return game.players[game.current_leader] == user_id ? (
-		<Form form={form} onFinish={suggest_team}>
-			<Form.Item
-				name="players"
-				rules={[
-					{
-						validator: validate_selection,
-					},
-				]}
-				initialValue={[]}
-			>
-				<Checkbox.Group onChange={set_selected}>
-					<Row>
-						{game.players.map((id) => (
-							<Col key={id} span={24}>
-								<Checkbox
-									value={id}
-									disabled={
-										!selected.includes(id) &&
-										selected.length >= players_per_mission[game.players.length][game.quest - 1]
-									}
-								>
-									{display_names[id]}
-								</Checkbox>
-							</Col>
-						))}
-					</Row>
-				</Checkbox.Group>
-			</Form.Item>
-			<Form.Item key="submit">
-				<Button type="primary" htmlType="submit" key="submit">
-					Select
-				</Button>
-			</Form.Item>
-		</Form>
+		<>
+			<Divider>select a team!</Divider>
+			<Form form={form} onFinish={suggest_team}>
+				<Form.Item
+					name="players"
+					rules={[
+						{
+							validator: validate_selection,
+						},
+					]}
+					initialValue={[]}
+				>
+					<Checkbox.Group onChange={set_selected}>
+						<Row>
+							{game.players.map((id) => (
+								<Col key={id} span={24}>
+									<Checkbox
+										value={id}
+										disabled={
+											!selected.includes(id) &&
+											selected.length >= players_per_mission[game.players.length][game.quest - 1]
+										}
+									>
+										{display_names[id]}
+									</Checkbox>
+								</Col>
+							))}
+						</Row>
+					</Checkbox.Group>
+				</Form.Item>
+				<Form.Item key="submit">
+					<Button type="primary" htmlType="submit" key="submit">
+						Select
+					</Button>
+				</Form.Item>
+			</Form>
+		</>
 	) : (
 		<>waiting for {display_names[game.players[game.current_leader]]} to select a team</>
 	);

@@ -1,6 +1,6 @@
 # avalon-fire
 
-### alpha 0.1.1
+### alpha 0.1.3
 
 realtime avalon with rooms, using firebase and react (hosted [here](cyan-pink.web.app), 5 or more people required to play)
 

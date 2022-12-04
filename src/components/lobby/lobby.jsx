@@ -1,4 +1,4 @@
-import { Button, Divider, List, Row, Col } from "antd";
+import { Button, Divider, List, Row, Col, Tooltip } from "antd";
 import { onSnapshot, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
@@ -7,7 +7,7 @@ import { leave_room, generate_setup_data } from "../../utils/room";
 import { end_game } from "../game/game_room";
 
 export default function Lobby(props) {
-	const { room_id, set_user_state } = props;
+	const { room_id, set_user_state, user_id, set_room_id, display_names } = props;
 	const [user_ids, set_user_ids] = useState([]);
 	const [creator_id, set_creator_id] = useState("");
 
@@ -38,30 +38,28 @@ export default function Lobby(props) {
 			<Row gutter={[2, 16]}>
 				<Col offset={8} span={8}>
 					<Divider>
-						Lobby: {room_id} creator: {props.display_names[creator_id]}
+						Lobby: {room_id} creator: {display_names[creator_id]}
 					</Divider>
 				</Col>
 				<Col offset={8} span={8}>
 					<List
 						bordered
 						dataSource={user_ids}
-						renderItem={(user_id) => <List.Item>{props.display_names[user_id]}</List.Item>}
+						renderItem={(user_id) => <List.Item>{display_names[user_id]}</List.Item>}
 					></List>
 				</Col>
 
 				<Col offset={8} span={4} style={{ textAlign: "right" }}>
-					{props.user_id !== creator_id ? (
+					{user_id !== creator_id ? (
 						<Button
-							onClick={() =>
-								leave_room(props.room_id, props.user_id, props.set_user_state, props.set_room_id)
-							}
+							onClick={() => leave_room(room_id, user_id, set_user_state, set_room_id)}
 							style={{ background: "red", borderColor: "red" }}
 						>
-							leave game
+							leave room
 						</Button>
 					) : (
 						<Button
-							onClick={() => end_game(props.room_id, props.set_user_state)}
+							onClick={() => end_game(room_id, set_user_state)}
 							style={{ background: "red", borderColor: "red" }}
 						>
 							disband lobby room
@@ -69,13 +67,19 @@ export default function Lobby(props) {
 					)}
 				</Col>
 				<Col span={4} style={{ textAlign: "left" }}>
-					<Button
-						onClick={() => start_game(props.room_id)}
-						type="primary"
-						disabled={props.user_id !== creator_id && !(user_ids.length === 2 || user_ids.length >= 5)}
-					>
-						start game
-					</Button>
+					{user_id === creator_id ? (
+						<Tooltip title="you need at least 5 players to start the game!">
+							<Button
+								onClick={() => start_game(room_id)}
+								type="primary"
+								disabled={!(user_ids.length === 2 || user_ids.length >= 5)}
+							>
+								start game
+							</Button>
+						</Tooltip>
+					) : (
+						<></>
+					)}
 				</Col>
 			</Row>
 		</>

@@ -16,9 +16,9 @@ export default function PlayerVotes(props) {
 							{Object.keys(game.votes).map((key) => {
 								return (
 									<Row>
-										<Col span={12}>{display_names[key]}</Col>
+										<Col span={14}>{display_names[key]}</Col>
 										{game.votes[key][quest].map((vote) => (
-											<Col span={3}>
+											<Col span={2}>
 												{vote ? (
 													<Tag color="green">
 														<CheckOutlined />

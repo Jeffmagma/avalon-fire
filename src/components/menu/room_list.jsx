@@ -38,7 +38,7 @@ export default function RoomList(props) {
 						) : (
 							<Button
 								onClick={() => {
-									join_room(room.id);
+									join_room(room.id, user_id, set_user_state, set_room_id);
 								}}
 							>
 								join

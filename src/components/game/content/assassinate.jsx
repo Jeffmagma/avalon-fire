@@ -22,7 +22,7 @@ export default function Assassinate(props) {
 				renderItem={(id) => {
 					return (
 						<List.Item>
-							{display_names[id]} <Button onClick={() => assassinate(id)}>kill????????</Button>
+							{display_names[id]} <Button onClick={() => assassinate(id)}>kill???????</Button>
 						</List.Item>
 					);
 				}}

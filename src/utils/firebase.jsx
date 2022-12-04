@@ -14,7 +14,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-connectFirestoreEmulator(db, "localhost", 8080);
+if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+	console.log("dev");
+	connectFirestoreEmulator(db, "localhost", 8080);
+} else {
+	console.log("prod");
+}
 
 export default db;
 
