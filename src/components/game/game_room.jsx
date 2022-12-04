@@ -1,6 +1,7 @@
-import { Button, Col, Row, Skeleton } from "antd";
+import { Button, Col, Collapse, Row, Skeleton } from "antd";
 import { onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
+const { Panel } = Collapse;
 
 import db from "../../utils/firebase";
 import { leave_room } from "../../utils/room";
@@ -50,12 +51,19 @@ export default function GameRoom(props) {
 				<Col span={6}>
 					<PlayerVotes game={game} display_names={display_names} />
 				</Col>
+				<Col span={6}>
+					hi {display_names[user_id]} you are {game.user_roles[user_id]}
+				</Col>
 			</Row>
-			{Object.entries(game).map(([key, value]) => (
-				<div key={key}>
-					{key} {JSON.stringify(value)} <br />
-				</div>
-			))}
+			<Collapse>
+				<Panel header="game data (debug)">
+					{Object.entries(game).map(([key, value]) => (
+						<div key={key}>
+							{key} {JSON.stringify(value)} <br />
+						</div>
+					))}
+				</Panel>
+			</Collapse>
 		</>
 	) : (
 		<Skeleton />
