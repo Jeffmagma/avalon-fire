@@ -27,7 +27,10 @@ export default function RoomList(props) {
 	}, []);
 
 	function render_room_item(room) {
-		const date = new Date(room.data.created * 1000);
+		const time_created = new Date(room.data.created * 1000).toLocaleTimeString("en-us", {
+			hour: "2-digit",
+			minute: "2-digit",
+		});
 
 		return (
 			<Panel
@@ -39,13 +42,12 @@ export default function RoomList(props) {
 							<RightOutlined
 								style={{
 									transform: expanded.includes(room.id) ? "rotate(90deg)" : "",
-									transition: "transform 150ms ease",
+									transition: "transform 200ms ease",
 								}}
 							/>
 						</Col>
-						<Col span={9}>created by: {display_names[room.data.creator]}</Col>
-						<Col span={6}>
-							at:{date.getHours()}:{date.getMinutes()}
+						<Col span={15}>
+							created by {display_names[room.data.creator]} at {time_created}
 						</Col>
 						<Col span={4}>players:{room.data.players.length}</Col>
 						<Col span={4} style={{ textAlign: "right" }}>
@@ -64,7 +66,8 @@ export default function RoomList(props) {
 					</Row>
 				}
 			>
-				{room.data.players.map((x) => display_names[x])}
+				<Row>players: {JSON.stringify(room.data.players.map((x) => display_names[x]))}</Row>
+				<Row>roles: {JSON.stringify(room.data.roles)}</Row>
 			</Panel>
 		);
 	}

@@ -1,12 +1,13 @@
 # avalon-fire
 
-### alpha 0.1.7
+### alpha 0.2.0
 
 realtime avalon with rooms, using firebase and react (hosted [here](cyan-pink.web.app), 5 or more people required to play)
 
 ## TODO
 
 -   [ ] replace ant design with mui/nextui/maybe something else? to use some ui stuff that might look nicer, some bugs with antd
+    -   [ ] first, actually gotta decide what goes where
 -   [x] implement actual game logic
     -   [x] keep track of votes, turn, fails, etc
     -   [x] know when someone has won
@@ -17,6 +18,8 @@ realtime avalon with rooms, using firebase and react (hosted [here](cyan-pink.we
 -   [ ] timeline? what do i put on the timeline
 -   [ ] tooltips when a button is disabled
 -   [ ] restructure votes object so that the mission is on the outside, assuming collapsible is the right structure
+-   [ ] move role select to in the lobby? is that objectively better
+-   [ ] targeting, plot, lady of the lake
 
 ## v2??
 

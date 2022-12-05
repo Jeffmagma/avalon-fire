@@ -6,7 +6,6 @@ const { Panel } = Collapse;
 import db from "../../utils/firebase";
 import { leave_room } from "../../utils/room";
 import GameContent from "./content/game_content";
-import MissionTimeline from "./mission_timeline";
 import PlayerList from "./player_list";
 import PlayerVotes from "./player_votes";
 
@@ -43,13 +42,13 @@ export default function GameRoom(props) {
 				<Button onClick={() => end_game(room_id, set_user_state)}>end game</Button>
 			</Row>
 			<Row>
-				<Col span={12}>
+				<Col xs={{ span: 24 }} lg={{ span: 12 }}>
 					<GameContent game={game} display_names={display_names} room_id={room_id} user_id={user_id} />
 				</Col>
-				<Col span={6}>
+				<Col xs={{ span: 24 }} lg={{ span: 6 }}>
 					<PlayerList game={game} display_names={display_names} user_id={user_id} />
 				</Col>
-				<Col span={6}>
+				<Col xs={{ span: 24 }} lg={{ span: 6 }}>
 					hi {display_names[user_id]} you are {game.user_roles[user_id]}
 				</Col>
 			</Row>

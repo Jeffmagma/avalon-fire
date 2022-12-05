@@ -1,5 +1,6 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { Form, Divider, Checkbox, Button, Row, Col, Space } from "antd";
+import { Divider, Checkbox, Button, Row, Col, Space } from "antd";
+import { useRef } from "react";
 import RoleInfo from "./roleinfo";
 
 import db from "../../utils/firebase";
@@ -11,6 +12,9 @@ export default function CreateRoomForm(props) {
 	const { user_id, set_user_state, set_room_id } = props;
 
 	const [selected_roles, set_selected_roles] = useState([]);
+	const use_lady = useRef();
+	const use_plot = useRef();
+	const use_targeting = useRef();
 
 	// create a game
 	function create_game() {
@@ -44,6 +48,32 @@ export default function CreateRoomForm(props) {
 							))}
 					</Row>
 				</Checkbox.Group>
+				<Checkbox ref={use_targeting} disabled>
+					targeting{" "}
+					<RoleInfo
+						info={{
+							info: "allows the leader to select which of the five quests to go on",
+						}}
+					/>
+				</Checkbox>
+				<Checkbox ref={use_plot} disabled>
+					plot cards{" "}
+					<RoleInfo
+						info={{
+							info: "plot cards are distributed by the leader at the start of every round",
+							helps: "good",
+						}}
+					/>
+				</Checkbox>
+				<Checkbox ref={use_lady} disabled>
+					lady of the lake{" "}
+					<RoleInfo
+						info={{
+							info: "allows a player to see another players role at the start of the last three rounds",
+							helps: "good",
+						}}
+					/>
+				</Checkbox>
 				<Button type="primary" onClick={create_game}>
 					Create
 				</Button>

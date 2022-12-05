@@ -1,7 +1,7 @@
 import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 import { players_per_mission } from "../../utils/avalon";
 
-export default function MissionTimeline(props) {
+export default function QuestTimeline(props) {
 	const { game } = props;
 
 	return (

@@ -31,12 +31,12 @@ export function generate_setup_data(game) {
 		game.roles = ["merlin", "assassin"];
 	} else {
 		const total_evil = Math.ceil(num_players / 3);
-		// fill remaining slots with merlin and generic roles
+		// fill remaining slots with merlin, assassin and generic roles
 		game.roles = [
 			...game.roles,
 			"merlin",
 			"assassin",
-			...Array(total_evil - evil).fill("evil"),
+			...Array(total_evil - evil - 1).fill("evil"),
 			...Array(num_players - total_evil - good - 1).fill("good"),
 		];
 		// shuffle the two data arrays to randomize roles and player order
@@ -44,8 +44,7 @@ export function generate_setup_data(game) {
 		shuffle(game.players);
 	}
 	// take the shuffled arrays and create an object out of them
-	const user_roles = Object.fromEntries(game.players.map((_, i) => [game.players[i], game.roles[i]]));
-	console.log(user_roles);
+	const user_roles = Object.fromEntries(game.players.map((_player, i) => [game.players[i], game.roles[i]]));
 	// create an object that represents what each info each player can see about the other players
 	const user_data = Object.fromEntries(
 		Object.entries(user_roles).map(([user, role]) => [
@@ -58,11 +57,9 @@ export function generate_setup_data(game) {
 			),
 		])
 	);
-	console.log(user_data);
-
 	// create an object to keep track of each players votes
 	const player_votes = Object.fromEntries(
-		game.players.map((_, i) => [game.players[i], Object.fromEntries([...Array(5).keys()].map((i) => [1 + i, []]))])
+		game.players.map((player) => [player, Object.fromEntries([...Array(5).keys()].map((i) => [1 + i, []]))])
 	);
 	console.log(player_votes);
 	// return the new data that should be pushed to the game room
