@@ -1,6 +1,6 @@
 import { collection, onSnapshot, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { signInAnonymously, onAuthStateChanged } from "firebase/auth";
-import React, { useState, useEffect, lazy } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 
 import db, { auth } from "./utils/firebase";
 import { join_room } from "./utils/room";
@@ -37,9 +37,9 @@ function Avalon() {
 				let user_info = doc(db, "users", user.uid);
 				getDoc(user_info).then((snapshot) => {
 					if (snapshot.exists()) {
-						// if the user already exists, get the display name from the server
-						console.log("found name");
 						const data = snapshot.data();
+						// if the user already exists, get the display name from the server
+						console.log("found user with uid [" + user.uid + "] display name [" + data.display_name + "]");
 						// if they are already in a game, put them into that room automatically
 						if (data.current_room !== "") {
 							join_room(data.current_room, user.uid, set_user_state, set_room_id);
@@ -73,32 +73,38 @@ function Avalon() {
 	switch (user_state) {
 		case "game":
 			return (
-				<GameRoom
-					room_id={room_id}
-					user_id={user_id}
-					display_names={display_names}
-					set_room_id={set_room_id}
-					set_user_state={set_user_state}
-				/>
+				<Suspense fallback={<Skeleton />}>
+					<GameRoom
+						room_id={room_id}
+						user_id={user_id}
+						display_names={display_names}
+						set_room_id={set_room_id}
+						set_user_state={set_user_state}
+					/>
+				</Suspense>
 			);
 		case "lobby":
 			return (
-				<Lobby
-					room_id={room_id}
-					user_id={user_id}
-					display_names={display_names}
-					set_room_id={set_room_id}
-					set_user_state={set_user_state}
-				/>
+				<Suspense fallback={<Skeleton />}>
+					<Lobby
+						room_id={room_id}
+						user_id={user_id}
+						display_names={display_names}
+						set_room_id={set_room_id}
+						set_user_state={set_user_state}
+					/>
+				</Suspense>
 			);
 		case "menu":
 			return (
-				<Menu
-					user_id={user_id}
-					display_names={display_names}
-					set_room_id={set_room_id}
-					set_user_state={set_user_state}
-				/>
+				<Suspense fallback={<Skeleton />}>
+					<Menu
+						user_id={user_id}
+						display_names={display_names}
+						set_room_id={set_room_id}
+						set_user_state={set_user_state}
+					/>
+				</Suspense>
 			);
 		default:
 			<>

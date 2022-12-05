@@ -1,6 +1,6 @@
 # avalon-fire
 
-### alpha 0.1.6
+### alpha 0.1.7
 
 realtime avalon with rooms, using firebase and react (hosted [here](cyan-pink.web.app), 5 or more people required to play)
 
@@ -23,5 +23,5 @@ realtime avalon with rooms, using firebase and react (hosted [here](cyan-pink.we
 -   [ ] typescript
 -   [ ] routes for each state, instead of a single page app (next.js possibly?)
     -   [ ] svelte looks very interesting but i don't understand `object = object` for deep reactivity? probably stick with react
--   [ ] custom component library or use primitive + lot of custom css
+-   [ ] custom component library or use radix + lot of custom css
 -   [ ] supabase realtime (learn postgres basics first)

@@ -25,14 +25,6 @@ export default function GameRoom(props) {
 	const game_doc = useMemo(() => doc(db, "rooms", room_id));
 	const [game, set_game] = useState(undefined);
 
-	const items = [
-		{ title: "first step" },
-		{ title: "second step", status: "error" },
-		{ title: "third step" },
-		{ title: "first step" },
-		{ title: "first step", status: "error" },
-	];
-
 	useEffect(() => {
 		const unsubscribe = onSnapshot(game_doc, (snapshot) => {
 			set_game(snapshot.data());
