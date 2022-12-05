@@ -11,7 +11,19 @@ export default function DisplayNameInput(props) {
 	const display_name = useRef("");
 
 	function update_display_name() {
-		updateDoc(doc(db, "users", user_id), { display_name: display_name.current.input.value });
+		updateDoc(doc(db, "users", user_id), { display_name: display_name.current.input.value })
+			.then(() =>
+				message_api.open({
+					type: "success",
+					content: "display name updated!",
+				})
+			)
+			.catch(() =>
+				message_api.open({
+					type: "error",
+					content: "error updating display name!",
+				})
+			);
 	}
 
 	return (
@@ -27,7 +39,6 @@ export default function DisplayNameInput(props) {
 				type="primary"
 				onClick={() => {
 					update_display_name();
-					message_api.info("display name updated!");
 				}}
 			>
 				update

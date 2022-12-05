@@ -35,6 +35,7 @@ export default function Menu(props) {
 						user_id={props.user_id}
 						set_room_id={props.set_room_id}
 						set_user_state={props.set_user_state}
+						display_names={props.display_names}
 					/>
 				</Col>
 			</Row>
