@@ -2,29 +2,22 @@ import React, { lazy, useState } from "react";
 import ReactDOM from "react-dom/client";
 const Avalon = lazy(() => import("./App"));
 
-import { ConfigProvider, Row, Switch, Col, theme } from "antd";
+import { ConfigProvider, Row, Switch, Col } from "antd";
 
 function ThemedApp() {
-	const [custom_theme, set_theme] = useState({
+	const light_theme = {
 		colorPrimary: "#1890ff",
-	});
+	};
+	const dark_theme = {
+		colorPrimary: "red",
+	};
+
+	const [custom_theme, set_theme] = useState(light_theme);
+
 	return (
-		<ConfigProvider theme={{ token: custom_theme, components: { Steps: { colorPrimary: "green" } } }}>
+		<ConfigProvider theme={{ token: custom_theme }}>
 			<Row>
-				<Switch
-					defaultChecked
-					onChange={(checked) => {
-						if (checked) {
-							set_theme({
-								colorPrimary: "#1890ff",
-							});
-						} else {
-							set_theme({
-								colorPrimary: "red",
-							});
-						}
-					}}
-				/>
+				<Switch defaultChecked onChange={(checked) => set_theme(checked ? light_theme : dark_theme)} />
 				&lt;- this is gonna be a dark mode switch eventually, for now it just turns the blue accent red
 			</Row>
 			<Row>

@@ -7,11 +7,21 @@ export default function TeamVote(props) {
 
 	function team_vote(result) {
 		const game_doc = doc(db, "rooms", room_id);
-		game.team_votes.push(result);
+		game.team_votes.push({ player: user_id, vote: result });
 		// if this is the last vote that needs to be counted, check if the next leader suggests a team or the quest starts
 		if (game.team_votes.length === game.players.length) {
+			// add all votes to players' data
+			updateDoc(
+				game_doc,
+				Object.fromEntries(
+					game.team_votes.map((vote) => [
+						"votes." + vote.player + "." + game.quest,
+						[...game.votes[vote.player][game.quest], vote.vote],
+					])
+				)
+			);
 			// more than half the players voted to accept the team
-			if (game.team_votes.filter((x) => x).length > game.players.length / 2) {
+			if (game.team_votes.filter((vote) => vote.vote).length > game.players.length / 2) {
 				// start the quest
 				updateDoc(game_doc, {
 					team_votes: [],
@@ -36,18 +46,12 @@ export default function TeamVote(props) {
 		} else {
 			updateDoc(game_doc, { team_votes: game.team_votes });
 		}
-		updateDoc(game_doc, {
-			// cannot use array union here cause it only adds unique values
-			["votes." + user_id + "." + game.quest]: [...game.votes[user_id][game.quest], result],
-		});
 	}
 
 	return (
 		<>
 			<List dataSource={game.current_team} renderItem={(x) => <List.Item>{display_names[x]}</List.Item>} />
-			{/* if the total amount of votes cast by this player is equal to the amount of turns that have passed*/}
-			{Object.values(game.votes[user_id]).reduce((accumulator, current) => accumulator + current.length, 0) ===
-			game.current_turn ? (
+			{!game.team_votes.some((vote) => vote.player === user_id) ? (
 				<>
 					<Button onClick={() => team_vote(true)}>approve</Button>
 					<Button onClick={() => team_vote(false)}>deny</Button>

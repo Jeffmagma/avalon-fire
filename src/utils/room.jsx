@@ -78,6 +78,7 @@ export function generate_setup_data(game) {
 		votes: player_votes, // object storying each players votes and on which mission (votes[user_id][mission] = [..., votes for the player])
 		timeline: [], // select -> leader, team, result | mission -> team, result | assassination -> target, result
 		quest_results: [], // results of the quests so far
+		previous_teams: [], // list of all previously suggest teams { leader: string, team: string[] }
 	};
 }
 

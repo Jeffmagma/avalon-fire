@@ -1,52 +1,49 @@
-import { Collapse, Row, Col, Tag, Divider } from "antd";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-const { Panel } = Collapse;
+import { Collapse, Tag, Divider, Table } from "antd";
+import { UserOutlined, MinusOutlined } from "@ant-design/icons";
+import { useMemo } from "react";
 
 export default function PlayerVotes(props) {
-	const { game, display_names } = props;
+	const { game, display_names, user_id } = props;
+
+	const table_data = useMemo(() => {
+		return game.players.map((x) => ({
+			key: x,
+			display_name: display_names[x],
+			...game.votes[x],
+		}));
+	}, [game]);
+	const table_columns = useMemo(() => {
+		return Object.keys(game.votes[user_id])
+			.filter((quest_number) => game.votes[user_id][quest_number].length > 0)
+			.map((quest_number) => ({
+				title: "quest " + quest_number,
+				dataIndex: quest_number,
+				width: 110,
+				render: (text, _row_data, table_index) =>
+					text.map((vote, index) => {
+						const team_index = Object.keys(game.votes[user_id])
+							.filter((q) => q < quest_number)
+							.reduce((accumulator, current) => accumulator + game.votes[user_id][current].length, 0);
+						return (
+							<Tag key={index} color={vote ? "green" : "red"}>
+								{game.previous_teams[team_index].team.includes(game.players[table_index]) ? (
+									<MinusOutlined />
+								) : (
+									<UserOutlined />
+								)}
+							</Tag>
+						);
+					}),
+			}));
+	}, [game]);
 
 	return (
 		<>
 			<Divider>votes</Divider>
-			<Collapse style={{ width: "100%" }}>
-				{[...Array(game.quest).keys()].map((x) => {
-					const quest = x + 1;
-					return (
-						<Panel
-							header={
-								<>
-									quest + {quest}
-									{quest === game.quest ? (
-										<Tag>current</Tag>
-									) : (
-										<Tag>{game.quest_results[x] ? "pass" : "fail"}</Tag>
-									)}
-								</>
-							}
-							key={x}
-						>
-							{Object.keys(game.votes).map((key) => (
-								<Row key={key + x}>
-									<Col span={14}>{display_names[key]}</Col>
-									{game.votes[key][quest].map((vote) => (
-										<Col span={2} key={key + x + Math.random()}>
-											{vote ? (
-												<Tag color="green">
-													<CheckOutlined />
-												</Tag>
-											) : (
-												<Tag color="red">
-													<CloseOutlined />
-												</Tag>
-											)}
-										</Col>
-									))}
-								</Row>
-							))}
-						</Panel>
-					);
-				})}
-			</Collapse>
+			<Table
+				dataSource={table_data}
+				columns={[{ title: "player", dataIndex: "display_name" }, ...table_columns]}
+			></Table>
 		</>
 	);
 }

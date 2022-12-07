@@ -15,9 +15,14 @@ export default function TeamSelect(props) {
 	// suggest a team, team is an array of player ids
 	function suggest_team(form_data) {
 		const game_doc = doc(db, "rooms", room_id);
-		updateDoc(game_doc, { game_status: "vote", current_team: form_data.players });
+		updateDoc(game_doc, {
+			game_status: "vote",
+			current_team: form_data.players,
+			previous_teams: [...game.previous_teams, { leader: user_id, team: form_data.players }],
+		});
 	}
 
+	// ensure the user has selected the right amount of players
 	function validate_selection(_rule, value) {
 		if (value.length === players_per_mission[game.players.length][game.quest - 1]) {
 			return Promise.resolve();
@@ -31,20 +36,17 @@ export default function TeamSelect(props) {
 			);
 		}
 	}
+	const form_rules = [
+		{
+			validator: validate_selection,
+		},
+	];
 
 	return game.players[game.current_leader] == user_id ? (
 		<>
 			<Divider>select a team!</Divider>
 			<Form form={form} onFinish={suggest_team}>
-				<Form.Item
-					name="players"
-					rules={[
-						{
-							validator: validate_selection,
-						},
-					]}
-					initialValue={[]}
-				>
+				<Form.Item name="players" rules={form_rules} initialValue={[]}>
 					<Checkbox.Group onChange={set_selected}>
 						<Row>
 							{game.players.map((id) => (
