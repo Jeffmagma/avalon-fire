@@ -2,15 +2,12 @@ import { List, Button } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 
-import db from "../../../utils/firebase";
 import { players_per_mission, roles } from "../../../utils/avalon";
 
-export default function QuestVote(props) {
-	const { game, display_names, room_id, user_id } = props;
+export default function QuestVote({ game, display_names, user_id, game_doc }) {
 	const [voted, set_voted] = useState(false);
 
 	function quest_vote(result) {
-		const game_doc = doc(db, "rooms", room_id);
 		game.quest_votes.push(result);
 		// this is the last vote that needs to be cast
 		// TODO maybe change all the "last votes" stuff to the creator of the room?

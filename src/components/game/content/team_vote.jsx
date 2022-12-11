@@ -1,12 +1,8 @@
 import { Button, List } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
-import db from "../../../utils/firebase";
 
-export default function TeamVote(props) {
-	const { game, display_names, room_id, user_id } = props;
-
+export default function TeamVote({ game, display_names, user_id, game_doc }) {
 	function team_vote(result) {
-		const game_doc = doc(db, "rooms", room_id);
 		game.team_votes.push({ player: user_id, vote: result });
 		// if this is the last vote that needs to be counted, check if the next leader suggests a team or the quest starts
 		if (game.team_votes.length === game.players.length) {

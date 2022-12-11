@@ -8,9 +8,7 @@ import { roles } from "../../utils/avalon";
 import { join_room } from "../../utils/room";
 import { useState } from "react";
 
-export default function CreateRoomForm(props) {
-	const { user_id, set_user_state, set_room_id } = props;
-
+export default function CreateRoomForm({ user_id, set_user_state, set_room_id }) {
 	const [selected_roles, set_selected_roles] = useState([]);
 	const use_lady = useRef();
 	const use_plot = useRef();

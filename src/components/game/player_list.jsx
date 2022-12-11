@@ -1,8 +1,6 @@
 import { Row, Col, List, Divider } from "antd";
 
-export default function PlayerList(props) {
-	const { game, display_names, user_id } = props;
-
+export default function PlayerList({ game, display_names, user_id }) {
 	return (
 		<>
 			<Divider>players</Divider>

@@ -8,6 +8,7 @@ import { leave_room } from "../../utils/room";
 import GameContent from "./content/game_content";
 import PlayerList from "./player_list";
 import PlayerVotes from "./player_votes";
+import QuestTimeline from "./quest_timeline";
 
 // end the game and disband the room
 export function end_game(room_id, set_user_state) {
@@ -19,9 +20,7 @@ export function end_game(room_id, set_user_state) {
 	});
 }
 
-export default function GameRoom(props) {
-	const { room_id, display_names, user_id, set_user_state, set_room_id } = props;
-
+export default function GameRoom({ room_id, display_names, user_id, set_user_state, set_room_id }) {
 	const game_doc = useMemo(() => doc(db, "rooms", room_id));
 	const [game, set_game] = useState(undefined);
 
@@ -43,13 +42,13 @@ export default function GameRoom(props) {
 				<Button onClick={() => end_game(room_id, set_user_state)}>end game</Button>
 			</Row>
 			<Row>
-				<Col xs={{ span: 24 }} lg={{ span: 12 }}>
-					<GameContent game={game} display_names={display_names} room_id={room_id} user_id={user_id} />
+				<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+					<GameContent game={game} display_names={display_names} user_id={user_id} game_doc={game_doc} />
 				</Col>
-				<Col xs={{ span: 24 }} lg={{ span: 6 }}>
+				<Col xs={{ span: 24 }} sm={{ span: 6 }}>
 					<PlayerList game={game} display_names={display_names} user_id={user_id} />
 				</Col>
-				<Col xs={{ span: 24 }} lg={{ span: 6 }}>
+				<Col xs={{ span: 24 }} sm={{ span: 6 }}>
 					hi {display_names[user_id]} you are {game.user_roles[user_id]}
 				</Col>
 			</Row>
@@ -58,9 +57,11 @@ export default function GameRoom(props) {
 					<PlayerVotes game={game} display_names={display_names} user_id={user_id} />
 				</Col>
 			</Row>
-			{/*<Row>
-				<MissionTimeline game={game} />
-	</Row>*/}
+			{
+				<Row>
+					<QuestTimeline game={game} />
+				</Row>
+			}
 			<Row>
 				<Collapse>
 					<Panel header="game data (debug)">

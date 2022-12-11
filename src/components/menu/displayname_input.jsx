@@ -4,9 +4,7 @@ import { useRef } from "react";
 
 import db from "../../utils/firebase";
 
-export default function DisplayNameInput(props) {
-	const { display_names, user_id } = props;
-
+export default function DisplayNameInput({ display_names, user_id }) {
 	const [message_api, context_holder] = message.useMessage();
 	const display_name = useRef("");
 

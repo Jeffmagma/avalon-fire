@@ -2,9 +2,7 @@ import { Collapse, Tag, Divider, Table } from "antd";
 import { UserOutlined, MinusOutlined } from "@ant-design/icons";
 import { useMemo } from "react";
 
-export default function PlayerVotes(props) {
-	const { game, display_names, user_id } = props;
-
+export default function PlayerVotes({ game, display_names, user_id }) {
 	const table_data = useMemo(() => {
 		return game.players.map((x) => ({
 			key: x,
@@ -18,7 +16,7 @@ export default function PlayerVotes(props) {
 			.map((quest_number) => ({
 				title: "quest " + quest_number,
 				dataIndex: quest_number,
-				width: 110,
+				width: 30 + 35 * game.votes[user_id][quest_number].length,
 				render: (text, _row_data, table_index) =>
 					text.map((vote, index) => {
 						const team_index = Object.keys(game.votes[user_id])
@@ -43,6 +41,8 @@ export default function PlayerVotes(props) {
 			<Table
 				dataSource={table_data}
 				columns={[{ title: "player", dataIndex: "display_name" }, ...table_columns]}
+				size="small"
+				pagination={false}
 			></Table>
 		</>
 	);

@@ -9,18 +9,16 @@ const TeamSelect = lazy(() => import("./team_select"));
 const TeamVote = lazy(() => import("./team_vote"));
 const QuestVote = lazy(() => import("./quest_vote"));*/
 
-export default function GameContent(props) {
-	const { game, display_names, room_id, user_id } = props;
-
+export default function GameContent({ game, display_names, user_id, game_doc }) {
 	switch (game.game_status) {
 		case "select":
-			return <TeamSelect game={game} display_names={display_names} room_id={room_id} user_id={user_id} />;
+			return <TeamSelect game={game} display_names={display_names} user_id={user_id} game_doc={game_doc} />;
 		case "vote":
-			return <TeamVote game={game} display_names={display_names} room_id={room_id} user_id={user_id} />;
+			return <TeamVote game={game} display_names={display_names} user_id={user_id} game_doc={game_doc} />;
 		case "quest":
-			return <QuestVote game={game} display_names={display_names} room_id={room_id} user_id={user_id} />;
+			return <QuestVote game={game} display_names={display_names} user_id={user_id} game_doc={game_doc} />;
 		case "assassinate":
-			return <Assassinate game={game} display_names={display_names} room_id={room_id} user_id={user_id} />;
+			return <Assassinate game={game} display_names={display_names} user_id={user_id} game_doc={game_doc} />;
 		case "evil_win":
 			return <>evil wins!</>;
 		case "good_win":

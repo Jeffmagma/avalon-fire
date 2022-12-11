@@ -1,6 +1,6 @@
 # avalon-fire
 
-### alpha 0.2.1
+### alpha 0.2.2
 
 realtime avalon with rooms, using firebase and react (hosted [here](cyan-pink.web.app), 5 or more people required to play)
 
@@ -13,12 +13,12 @@ realtime avalon with rooms, using firebase and react (hosted [here](cyan-pink.we
     -   [ ] does anyone know why it seems like in every ui library it's super easy to get a tag with a custom color, but changing the color of text or buttons seems unnecessarily hard? why don't they just have the same color property?
 -   [x] implement actual game logic
     -   [x] keep track of votes, turn, fails, etc
-    -   [ ] keep track of quest leaders, and only count votes after everyone has voted
+    -   [x] keep track of quest leaders, and only count votes after everyone has voted
     -   [x] know when someone has won
 -   [x] restructure file system
 -   [ ] possible google/facebook login when public
 -   [ ] simpler (custom?) room IDs, or hide room id altogether and let users find rooms based on usernames
--   [ ] refactor to automatically deconstruct props, look into moving some state around
+-   [x] refactor to automatically deconstruct props, look into moving some state around
 -   [ ] timeline? what do i put on the timeline
 -   [ ] tooltips when a button is disabled
 -   [ ] restructure votes object so that the mission is on the outside, assuming collapsible is the right structure

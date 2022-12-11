@@ -7,9 +7,7 @@ const { Panel } = Collapse;
 import db from "../../utils/firebase";
 import { join_room } from "../../utils/room";
 
-export default function RoomList(props) {
-	const { user_id, set_room_id, set_user_state, display_names } = props;
-
+export default function RoomList({ user_id, set_room_id, set_user_state, display_names }) {
 	const [rooms, set_rooms] = useState([]);
 	const [expanded, set_expanded] = useState([]);
 

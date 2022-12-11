@@ -6,15 +6,12 @@ import { doc, updateDoc } from "firebase/firestore";
 import db from "../../../utils/firebase";
 import { players_per_mission } from "../../../utils/avalon";
 
-export default function TeamSelect(props) {
-	const { game, display_names, room_id, user_id } = props;
-
+export default function TeamSelect({ game, display_names, user_id, game_doc }) {
 	const [form] = useForm();
 	const [selected, set_selected] = useState([]);
 
 	// suggest a team, team is an array of player ids
 	function suggest_team(form_data) {
-		const game_doc = doc(db, "rooms", room_id);
 		updateDoc(game_doc, {
 			game_status: "vote",
 			current_team: form_data.players,
@@ -23,22 +20,21 @@ export default function TeamSelect(props) {
 	}
 
 	// ensure the user has selected the right amount of players
-	function validate_selection(_rule, value) {
-		if (value.length === players_per_mission[game.players.length][game.quest - 1]) {
-			return Promise.resolve();
-		} else {
-			return Promise.reject(
-				new Error(
-					"You need " +
-						players_per_mission[game.players.length][game.quest - 1] +
-						" players for this mission!"
-				)
-			);
-		}
-	}
 	const form_rules = [
 		{
-			validator: validate_selection,
+			validator: (_rule, value) => {
+				if (value.length === players_per_mission[game.players.length][game.quest - 1]) {
+					return Promise.resolve();
+				} else {
+					return Promise.reject(
+						new Error(
+							"You need " +
+								players_per_mission[game.players.length][game.quest - 1] +
+								" players for this mission!"
+						)
+					);
+				}
+			},
 		},
 	];
 

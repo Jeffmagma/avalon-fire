@@ -6,8 +6,7 @@ import db from "../../utils/firebase";
 import { leave_room, generate_setup_data } from "../../utils/room";
 import { end_game } from "../game/game_room";
 
-export default function Lobby(props) {
-	const { room_id, set_user_state, user_id, set_room_id, display_names } = props;
+export default function Lobby({ room_id, set_user_state, user_id, set_room_id, display_names }) {
 	const [user_ids, set_user_ids] = useState([]);
 	const [creator_id, set_creator_id] = useState("");
 
