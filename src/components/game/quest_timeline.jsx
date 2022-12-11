@@ -1,29 +1,20 @@
-import { CheckCircleFilled, CloseCircleFilled, QuestionCircleFilled, LoadingOutlined } from "@ant-design/icons";
+import { CheckCircleFilled, CloseCircleFilled, QuestionCircleFilled, MehFilled } from "@ant-design/icons";
 import { Card, Divider, Steps } from "antd";
 import { players_per_mission } from "../../utils/avalon";
+
+import "../../test.css";
 
 export default function QuestTimeline({ game }) {
 	const step_items = players_per_mission[game.players.length].map((player_num, index) => ({
 		title: player_num + " players",
-		status:
-			game.quest === index + 1
-				? "process"
-				: index + 1 > game.quest
-				? "wait"
-				: game.quest_results[index + 1]
-				? "process"
-				: "error",
-		icon:
-			game.quest === index + 1 ? (
-				<LoadingOutlined />
-			) : index + 1 > game.quest ? (
-				<QuestionCircleFilled />
-			) : game.quest_results[index + 1] ? (
-				<CheckCircleFilled />
-			) : (
-				<CloseCircleFilled />
-			),
-		...(index === 3 && { description: "requires 2 fails!" }),
+		...(game.quest === index + 1 && { status: "process", icon: <MehFilled /> }),
+		...(index + 1 > game.quest && { status: "wait", icon: <QuestionCircleFilled /> }),
+		...(game.quest_results[index] === true && { status: "process", icon: <CheckCircleFilled /> }),
+		...(game.quest_results[index] === false && { status: "error	", icon: <CloseCircleFilled /> }),
+		...(index === 3 &&
+			players_per_mission.two_fail(game.players.length) && {
+				description: "requires 2 fails!",
+			}),
 	}));
 
 	return (
