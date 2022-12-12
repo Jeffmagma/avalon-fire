@@ -1,4 +1,4 @@
-import { Button, Col, Collapse, Row, Skeleton, Steps } from "antd";
+import { Button, Col, Collapse, Row, Skeleton, Space, Steps, Typography } from "antd";
 import { onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 const { Panel } = Collapse;
@@ -41,27 +41,26 @@ export default function GameRoom({ room_id, display_names, user_id, set_user_sta
 				<Button onClick={() => leave_room(room_id, user_id, set_user_state, set_room_id)}>leave room</Button>
 				<Button onClick={() => end_game(room_id, set_user_state)}>end game</Button>
 			</Row>
-			<Row>
-				<Col xs={{ span: 24 }} sm={{ span: 12 }}>
+			<Row gutter={[12, 12]}>
+				<Col offset={2} span={10}>
+					<Typography.Text>
+						hi {display_names[user_id]} you are {game.user_roles[user_id]}
+					</Typography.Text>
+				</Col>
+				<Col span={10}>
+					<QuestTimeline game={game} />
+				</Col>
+				<Col xs={{ span: 24 }} sm={{ offset: 2, span: 10 }}>
 					<GameContent game={game} display_names={display_names} user_id={user_id} game_doc={game_doc} />
 				</Col>
 				<Col xs={{ span: 24 }} sm={{ span: 6 }}>
 					<PlayerList game={game} display_names={display_names} user_id={user_id} />
 				</Col>
-				<Col xs={{ span: 24 }} sm={{ span: 6 }}>
-					hi {display_names[user_id]} you are {game.user_roles[user_id]}
-				</Col>
-			</Row>
-			<Row>
+				<Col xs={{ span: 24 }} sm={{ span: 6 }}></Col>
 				<Col span={24}>
 					<PlayerVotes game={game} display_names={display_names} user_id={user_id} />
 				</Col>
 			</Row>
-			{
-				<Row>
-					<QuestTimeline game={game} />
-				</Row>
-			}
 			<Row>
 				<Collapse>
 					<Panel header="game data (debug)">

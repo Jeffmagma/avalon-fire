@@ -1,4 +1,4 @@
-import { Checkbox, Form, Row, Button, Col, Divider } from "antd";
+import { Checkbox, Form, Row, Button, Col, Divider, Card } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
@@ -39,8 +39,7 @@ export default function TeamSelect({ game, display_names, user_id, game_doc }) {
 	];
 
 	return game.players[game.current_leader] == user_id ? (
-		<>
-			<Divider>select a team!</Divider>
+		<Card title="select a team!">
 			<Form form={form} onFinish={suggest_team}>
 				<Form.Item name="players" rules={form_rules} initialValue={[]}>
 					<Checkbox.Group onChange={set_selected}>
@@ -67,7 +66,7 @@ export default function TeamSelect({ game, display_names, user_id, game_doc }) {
 					</Button>
 				</Form.Item>
 			</Form>
-		</>
+		</Card>
 	) : (
 		<>waiting for {display_names[game.players[game.current_leader]]} to select a team</>
 	);

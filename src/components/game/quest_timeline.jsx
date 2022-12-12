@@ -18,9 +18,8 @@ export default function QuestTimeline({ game }) {
 	}));
 
 	return (
-		<Card style={{ width: "100%" }}>
-			<Divider>missions</Divider>
-			<Steps items={step_items} />
+		<Card style={{ width: "100%" }} title="quests">
+			<Steps size="small" items={step_items} />
 		</Card>
 	);
 }

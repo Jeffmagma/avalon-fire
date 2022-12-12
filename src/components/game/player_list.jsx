@@ -1,9 +1,8 @@
-import { Row, Col, List, Divider } from "antd";
+import { Row, Col, List, Divider, Card } from "antd";
 
 export default function PlayerList({ game, display_names, user_id }) {
 	return (
-		<>
-			<Divider>players</Divider>
+		<Card title="players">
 			<List
 				bordered
 				dataSource={game.players}
@@ -20,6 +19,6 @@ export default function PlayerList({ game, display_names, user_id }) {
 					</List.Item>
 				)}
 			/>
-		</>
+		</Card>
 	);
 }
